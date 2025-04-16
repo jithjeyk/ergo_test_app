@@ -1,0 +1,64 @@
+{
+    "common": {
+      "pleaseWait": "कृपया प्रतीक्षा करें",
+      "download": "डाउनलोड",
+      "pagination": "{{totalItems}} परिणामों में से {{startItem}} से {{endItem}} तक दिखा रहा है"
+    },
+    "navigation": {
+      "dashboard": "डैशबोर्ड",
+      "myAssistant": "मेरा सहायक",
+      "myKnowledgeBase": "मेरा ज्ञान आधार",
+      "myTeam": "मेरी टीम",
+      "profile": "प्रोफ़ाइल",
+      "myReports": "मेरी रिपोर्ट",
+      "settings": "सेटिंग्स",
+      "notifications": "सूचनाएँ",
+      "messages": "संदेश",
+      "help": "सहायता",
+      "about": "हमारे बारे में",
+      "contact": "संपर्क करें",
+      "privacyPolicy": "गोपनीयता नीति",
+      "termsOfService": "सेवा की शर्तें",
+      "verySoon": "यह सुविधा बहुत जल्द आ रही है"
+    },
+    "fileManager": {
+      "myDocuments": "मेरे दस्तावेज़",
+      "viewAndManage": "अपने दस्तावेज़ लाइब्रेरी को देखें और प्रबंधित करें",
+      "home": "होम",
+      "recentFiles": "हाल के फाइल",
+      "sharedWithMe": "मेरे साथ साझा किए गए",
+      "favorites": "पसंदीदा",
+      "allDocuments": "सभी दस्तावेज़",
+      "processingUpload": "अपलोड प्रसंस्करण हो रहा है",
+      "dropToUpload": "अपलोड करने के लिए ड्रॉप करें",
+      "releaseDocuments": "अपलोड शुरू करने के लिए फ़ाइलें या फ़ोल्डर छोड़ें",
+      "folders": "फ़ोल्डर",
+      "documents": "दस्तावेज़",
+      "share": "साझा करें",
+      "rename": "नाम बदलें",
+      "moveTo": "यहां ले जाएं",
+      "removeFromStarred": "स्टार्ड से हटाएं",
+      "addToStarred": "स्टार्ड में जोड़ें",
+      "folderColor": "फ़ोल्डर का रंग",
+      "folderInformation": "फ़ोल्डर जानकारी",
+      "fileInformation": "फ़ाइल जानकारी",
+      "moveToTrash": "ट्रैश में ले जाएं"
+    },
+    "buttons": {
+      "next": "अगला",
+      "previous": "पिछला",
+      "createFolder": "फ़ोल्डर बनाएं",
+      "uploadFolder": "फ़ोल्डर अपलोड करें",
+      "uploadFiles": "फ़ाइलें अपलोड करें",
+      "uploadInProgress": "अपलोड जारी है"
+    },
+    "profile": {
+      "administrator": "प्रशासक",
+      "personalInfo": "व्यक्तिगत जानकारी",
+      "accountSettings": "खाता सेटिंग्स",
+      "changePassword": "पासवर्ड बदलें",
+      "preferences": "प्राथमिकताएँ",
+      "notifications": "सूचनाएँ",
+      "securitySettings": "सुरक्षा सेटिंग्स"
+    }
+  }

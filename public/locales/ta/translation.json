@@ -1,0 +1,64 @@
+{
+    "common": {
+      "pleaseWait": "தயவுசெய்து காத்திருக்கவும்",
+      "download": "பதிவிறக்கம்",
+      "pagination": "{{totalItems}} முடிவுகளில் {{startItem}} முதல் {{endItem}} வரை காட்டுகிறது"
+    },
+    "navigation": {
+      "dashboard": "டாஷ்போர்டு",
+      "myAssistant": "எனது உதவியாளர்",
+      "myKnowledgeBase": "எனது அறிவுத் தளம்",
+      "myTeam": "எனது குழு",
+      "profile": "சுயவிவரம்",
+      "myReports": "எனது அறிக்கைகள்",
+      "settings": "அமைப்புகள்",
+      "notifications": "அறிவிப்புகள்",
+      "messages": "செய்திகள்",
+      "help": "உதவி",
+      "about": "எங்களைப் பற்றி",
+      "contact": "தொடர்பு கொள்ளவும்",
+      "privacyPolicy": "தனியுரிமைக் கொள்கை",
+      "termsOfService": "சேவை விதிமுறைகள்",
+      "verySoon": "இந்த அம்சம் மிக விரைவில் வருகிறது"
+    },
+    "fileManager": {
+      "myDocuments": "எனது ஆவணங்கள்",
+      "viewAndManage": "உங்கள் ஆவண நூலகத்தை பார்த்து நிர்வகிக்கவும்",
+      "home": "முகப்பு",
+      "recentFiles": "சமீபத்திய கோப்புகள்",
+      "sharedWithMe": "என்னுடன் பகிரப்பட்டவை",
+      "favorites": "பிடித்தவை",
+      "allDocuments": "அனைத்து ஆவணங்கள்",
+      "processingUpload": "பதிவேற்றம் செயலாக்கப்படுகிறது",
+      "dropToUpload": "பதிவேற்ற விடவும்",
+      "releaseDocuments": "பதிவேற்றத் தொடங்க கோப்புகள் அல்லது கோப்புறைகளை விடுவிக்கவும்",
+      "folders": "கோப்புறைகள்",
+      "documents": "ஆவணங்கள்",
+      "share": "பகிர்",
+      "rename": "மறுபெயரிடு",
+      "moveTo": "இங்கு நகர்த்து",
+      "removeFromStarred": "நட்சத்திரமிட்டவற்றிலிருந்து நீக்கு",
+      "addToStarred": "நட்சத்திரமிடப்பட்டவற்றில் சேர்",
+      "folderColor": "கோப்புறை நிறம்",
+      "folderInformation": "கோப்புறை தகவல்",
+      "fileInformation": "கோப்பு தகவல்",
+      "moveToTrash": "குப்பைக்கு நகர்த்து"
+    },
+    "buttons": {
+      "next": "அடுத்து",
+      "previous": "முந்தைய",
+      "createFolder": "கோப்புறையை உருவாக்கு",
+      "uploadFolder": "கோப்புறையை பதிவேற்று",
+      "uploadFiles": "கோப்புகளை பதிவேற்று",
+      "uploadInProgress": "பதிவேற்றம் நடந்துகொண்டிருக்கிறது"
+    },
+    "profile": {
+      "administrator": "நிர்வாகி",
+      "personalInfo": "தனிப்பட்ட தகவல்",
+      "accountSettings": "கணக்கு அமைப்புகள்",
+      "changePassword": "கடவுச்சொல்லை மாற்று",
+      "preferences": "விருப்பத்தேர்வுகள்",
+      "notifications": "அறிவிப்புகள்",
+      "securitySettings": "பாதுகாப்பு அமைப்புகள்"
+    }
+  }

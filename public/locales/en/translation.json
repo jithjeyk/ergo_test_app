@@ -1,0 +1,64 @@
+{
+  "common": {
+    "pleaseWait": "Please wait",
+    "download": "Download",
+    "pagination": "Showing {{startItem}} to {{endItem}} of {{totalItems}} results"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "myAssistant": "My Assistant",
+    "myKnowledgeBase": "My Knowledge Base",
+    "myTeam": "My Team",
+    "profile": "Profile",
+    "myReports": "My Reports",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "messages": "Messages",
+    "help": "Help",
+    "about": "About Us",
+    "contact": "Contact Us",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "verySoon": "This feature is coming very soon"
+  },
+  "fileManager": {
+    "myDocuments": "My Documents",
+    "viewAndManage": "View and manage your documents library",
+    "home": "Home",
+    "recentFiles": "Recent Files",
+    "sharedWithMe": "Shared with Me",
+    "favorites": "Favorites",
+    "allDocuments": "All Documents",
+    "processingUpload": "Processing Upload",
+    "dropToUpload": "Drop to Upload",
+    "releaseDocuments": "Release files or folders to start uploading",
+    "folders": "Folders",
+    "documents": "Documents",
+    "share": "Share",
+    "rename": "Rename",
+    "moveTo": "Move to",
+    "removeFromStarred": "Remove from Starred",
+    "addToStarred": "Add to Starred",
+    "folderColor": "Folder Color",
+    "folderInformation": "Folder Information",
+    "fileInformation": "File Information",
+    "moveToTrash": "Move to Trash"
+  },
+  "buttons": {
+    "next": "Next",
+    "previous": "Previous",
+    "createFolder": "Create Folder",
+    "uploadFolder": "Upload Folder",
+    "uploadFiles": "Upload Files",
+    "uploadInProgress": "Upload in Progress"
+  },
+  "profile": {
+    "administrator": "Administrator",
+    "personalInfo": "Personal Information",
+    "accountSettings": "Account Settings",
+    "changePassword": "Change Password",
+    "preferences": "Preferences",
+    "notifications": "Notifications",
+    "securitySettings": "Security Settings"
+  }
+}

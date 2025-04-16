@@ -1,0 +1,64 @@
+{
+  "common": {
+    "pleaseWait": "ದಯವಿಟ್ಟು ನಿರೀಕ್ಷಿಸಿ",
+    "download": "ಡೌನ್‌ಲೋಡ್",
+    "pagination": "{{totalItems}} ಫಲಿತಾಂಶಗಳಲ್ಲಿ {{startItem}} ರಿಂದ {{endItem}} ವರೆಗೆ ತೋರಿಸಲಾಗುತ್ತಿದೆ"
+  },
+  "navigation": {
+    "dashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+    "myAssistant": "ನನ್ನ ಸಹಾಯಕ",
+    "myKnowledgeBase": "ನನ್ನ ಜ್ಞಾನ ಭಂಡಾರ",
+    "myTeam": "ನನ್ನ ತಂಡ",
+    "profile": "ಪ್ರೊಫೈಲ್",
+    "myReports": "ನನ್ನ ವರದಿಗಳು",
+    "settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    "notifications": "ಅಧಿಸೂಚನೆಗಳು",
+    "messages": "ಸಂದೇಶಗಳು",
+    "help": "ಸಹಾಯ",
+    "about": "ನಮ್ಮ ಬಗ್ಗೆ",
+    "contact": "ಸಂಪರ್ಕಿಸಿ",
+    "privacyPolicy": "ಗೌಪ್ಯತಾ ನೀತಿ",
+    "termsOfService": "ಸೇವಾ ನಿಯಮಗಳು",
+    "verySoon": "ಈ ವೈಶಿಷ್ಟ್ಯವು ಬಹಳ ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ"
+  },
+  "fileManager": {
+    "myDocuments": "ನನ್ನ ದಾಖಲೆಗಳು",
+    "viewAndManage": "ನಿಮ್ಮ ದಾಖಲೆಗಳ ಲೈಬ್ರರಿಯನ್ನು ವೀಕ್ಷಿಸಿ ಮತ್ತು ನಿರ್ವಹಿಸಿ",
+    "home": "ಮುಖಪುಟ",
+    "recentFiles": "ಇತ್ತೀಚಿನ ಫೈಲ್‌ಗಳು",
+    "sharedWithMe": "ನನ್ನೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಲಾಗಿದೆ",
+    "favorites": "ನೆಚ್ಚಿನವುಗಳು",
+    "allDocuments": "ಎಲ್ಲಾ ದಾಖಲೆಗಳು",
+    "processingUpload": "ಅಪ್‌ಲೋಡ್ ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ",
+    "dropToUpload": "ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ಬಿಡಿ",
+    "releaseDocuments": "ಅಪ್‌ಲೋಡ್ ಪ್ರಾರಂಭಿಸಲು ಫೈಲ್‌ಗಳು ಅಥವಾ ಫೋಲ್ಡರ್‌ಗಳನ್ನು ಬಿಡುಗಡೆ ಮಾಡಿ",
+    "folders": "ಫೋಲ್ಡರ್‌ಗಳು",
+    "documents": "ದಾಖಲೆಗಳು",
+    "share": "ಹಂಚಿಕೊಳ್ಳಿ",
+    "rename": "ಮರುಹೆಸರಿಸಿ",
+    "moveTo": "ಇಲ್ಲಿಗೆ ಸರಿಸಿ",
+    "removeFromStarred": "ನಕ್ಷತ್ರಗುರುತಿಸಿದವುಗಳಿಂದ ತೆಗೆದುಹಾಕಿ",
+    "addToStarred": "ನಕ್ಷತ್ರಗುರುತಿಸಿದವುಗಳಿಗೆ ಸೇರಿಸಿ",
+    "folderColor": "ಫೋಲ್ಡರ್ ಬಣ್ಣ",
+    "folderInformation": "ಫೋಲ್ಡರ್ ಮಾಹಿತಿ",
+    "fileInformation": "ಫೈಲ್ ಮಾಹಿತಿ",
+    "moveToTrash": "ಕಸದ ಬುಟ್ಟಿಗೆ ಸರಿಸಿ"
+  },
+  "buttons": {
+    "next": "ಮುಂದಿನದು",
+    "previous": "ಹಿಂದಿನದು",
+    "createFolder": "ಫೋಲ್ಡರ್ ರಚಿಸಿ",
+    "uploadFolder": "ಫೋಲ್ಡರ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
+    "uploadFiles": "ಫೈಲ್‌ಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
+    "uploadInProgress": "ಅಪ್‌ಲೋಡ್ ಪ್ರಗತಿಯಲ್ಲಿದೆ"
+  },
+  "profile": {
+    "administrator": "ನಿರ್ವಾಹಕ",
+    "personalInfo": "ವೈಯಕ್ತಿಕ ಮಾಹಿತಿ",
+    "accountSettings": "ಖಾತೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    "changePassword": "ಪಾಸ್‌ವರ್ಡ್ ಬದಲಾಯಿಸಿ",
+    "preferences": "ಆದ್ಯತೆಗಳು",
+    "notifications": "ಅಧಿಸೂಚನೆಗಳು",
+    "securitySettings": "ಭದ್ರತಾ ಸೆಟ್ಟಿಂಗ್‌ಗಳು"
+  }
+}

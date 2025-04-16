@@ -1,0 +1,64 @@
+{
+  "common": {
+    "pleaseWait": "దయచేసి వేచి ఉండండి",
+    "download": "డౌన్‌లోడ్",
+    "pagination": "{{totalItems}} ఫలితాలలో {{startItem}} నుండి {{endItem}} వరకు చూపుతున్నాము"
+  },
+  "navigation": {
+    "dashboard": "డాష్‌బోర్డ్",
+    "myAssistant": "నా సహాయకుడు",
+    "myKnowledgeBase": "నా జ్ఞాన భాండాగారం",
+    "myTeam": "నా బృందం",
+    "profile": "ప్రొఫైల్",
+    "myReports": "నా నివేదికలు",
+    "settings": "సెట్టింగ్‌లు",
+    "notifications": "నోటిఫికేషన్లు",
+    "messages": "సందేశాలు",
+    "help": "సహాయం",
+    "about": "మా గురించి",
+    "contact": "సంప్రదించండి",
+    "privacyPolicy": "గోప్యతా విధానం",
+    "termsOfService": "సేవా నిబంధనలు",
+    "verySoon": "ఈ ఫీచర్ త్వరలో వస్తోంది"
+  },
+  "fileManager": {
+    "myDocuments": "నా పత్రాలు",
+    "viewAndManage": "మీ పత్రాల లైబ్రరీని చూడండి మరియు నిర్వహించండి",
+    "home": "హోమ్",
+    "recentFiles": "ఇటీవలి ఫైళ్లు",
+    "sharedWithMe": "నాతో షేర్ చేయబడినవి",
+    "favorites": "ఇష్టమైనవి",
+    "allDocuments": "అన్ని పత్రాలు",
+    "processingUpload": "అప్‌లోడ్ ప్రాసెసింగ్",
+    "dropToUpload": "అప్‌లోడ్ చేయడానికి డ్రాప్ చేయండి",
+    "releaseDocuments": "అప్‌లోడ్ చేయడం ప్రారంభించడానికి ఫైళ్లు లేదా ఫోల్డర్లను విడుదల చేయండి",
+    "folders": "ఫోల్డర్లు",
+    "documents": "పత్రాలు",
+    "share": "షేర్ చేయండి",
+    "rename": "పేరు మార్చండి",
+    "moveTo": "ఇక్కడికి తరలించండి",
+    "removeFromStarred": "నక్షత్రాలుగా గుర్తించినవి నుండి తొలగించండి",
+    "addToStarred": "నక్షత్రాలుగా గుర్తించినవికి జోడించండి",
+    "folderColor": "ఫోల్డర్ రంగు",
+    "folderInformation": "ఫోల్డర్ సమాచారం",
+    "fileInformation": "ఫైల్ సమాచారం",
+    "moveToTrash": "ట్రాష్‌కి తరలించండి"
+  },
+  "buttons": {
+    "next": "తదుపరి",
+    "previous": "మునుపటి",
+    "createFolder": "ఫోల్డర్ సృష్టించండి",
+    "uploadFolder": "ఫోల్డర్ అప్‌లోడ్ చేయండి",
+    "uploadFiles": "ఫైళ్లను అప్‌లోడ్ చేయండి",
+    "uploadInProgress": "అప్‌లోడ్ ప్రక్రియలో ఉంది"
+  },
+  "profile": {
+    "administrator": "నిర్వాహకుడు",
+    "personalInfo": "వ్యక్తిగత సమాచారం",
+    "accountSettings": "ఖాతా సెట్టింగ్‌లు",
+    "changePassword": "పాస్‌వర్డ్ మార్చండి",
+    "preferences": "ప్రాధాన్యతలు",
+    "notifications": "నోటిఫికేషన్లు",
+    "securitySettings": "భద్రతా సెట్టింగ్‌లు"
+  }
+}
