@@ -3,7 +3,7 @@ import {
   AppBar,
   AppBarProps as MuiAppBarProps,
   Toolbar,
-  Typography,
+  // Typography,
   Box,
   IconButton,
   Avatar,
@@ -16,7 +16,7 @@ import {
   LightMode as LightModeIcon,
   Menu as MenuIcon,
 } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+// import { useTheme } from '@mui/material/styles';
 import { useContext } from 'react';
 import { ThemeContext } from '../../../context/ThemeContext';
 import { AuthContext } from '../../../context/AuthContext';
@@ -59,7 +59,7 @@ const RightActionsContainer = styled(Box)({
 });
 
 export const AppBarComponent: React.FC<CustomAppBarProps> = ({ open, onDrawerOpen }) => {
-  const theme = useTheme();
+  // const theme = useTheme();
   const { toggleColorMode, mode } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
 

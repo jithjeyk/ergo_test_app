@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Breadcrumbs, Link, Typography, Box } from "@mui/material";
+import { Breadcrumbs, Link, Box } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { BreadcrumbSegment } from "../../../types/document";

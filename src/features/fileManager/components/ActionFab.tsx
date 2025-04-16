@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react"; // Added useState import
 import {
   Box,
-  Fab,
+  // Fab,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
@@ -11,8 +11,8 @@ import {
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import FolderIcon from "@mui/icons-material/Folder";
-import CloseIcon from "@mui/icons-material/Close";
-import AddIcon from "@mui/icons-material/Add";
+// import CloseIcon from "@mui/icons-material/Close";
+// import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
 
 interface ActionFabProps {

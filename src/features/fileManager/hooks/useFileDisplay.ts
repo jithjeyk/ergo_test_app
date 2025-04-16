@@ -15,7 +15,7 @@ export function isFolder(item: FileSystemItem | Folder | File): item is Folder {
 type FolderItem = Folder | File; // Union type based on document.ts
 
 // Types for local state within the hook
-type QueryType = "all"; // Extend later if needed (recent, shared etc requires more state/selectors)
+// type QueryType = "all"; // Extend later if needed (recent, shared etc requires more state/selectors)
 interface SortOptions {
     field: keyof FolderItem | 'type'; // Allow sorting by 'type' discriminator
     direction: "asc" | "desc";

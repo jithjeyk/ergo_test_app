@@ -2,7 +2,7 @@ import React from 'react';
 import { ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Document } from '../../../types/types'; // Adjust path
-import { getIconForItem } from '../utils/getIconForItem'; // Adjust path
+// import { getIconForItem } from '../utils/getIconForItem'; // Adjust path
 
 interface DocumentItemProps {
   document: Document;

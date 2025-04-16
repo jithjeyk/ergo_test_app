@@ -6,8 +6,8 @@ import {
   InsertDriveFileOutlined as InsertDriveFileOutlinedIcon,
   TipsAndUpdatesOutlined as TipsAndUpdatesOutlinedIcon,
   AssessmentOutlined as AssessmentOutlinedIcon,
-  GppGoodOutlined as GppGoodOutlinedIcon,
-  SettingsInputComponentOutlined as SettingsInputComponentOutlinedIcon,
+  // GppGoodOutlined as GppGoodOutlinedIcon,
+  // SettingsInputComponentOutlined as SettingsInputComponentOutlinedIcon,
 } from "@mui/icons-material";
 import { SvgIconProps } from "@mui/material";
 import { useTranslation } from "react-i18next";

@@ -8,8 +8,8 @@ export const store = configureStore({
     // other reducers...
   },
   // Optional: Add middleware (e.g., logger in development)
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
-  devTools: process.env.NODE_ENV !== 'production', // Enable DevTools in development
+  // middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+  // devTools: process.env.NODE_ENV !== 'production', // Enable DevTools in development
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

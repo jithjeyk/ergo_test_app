@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Menu, MenuItem, ListItemIcon, ListItemText, Divider, Popover, Box, Typography
 } from '@mui/material';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+// import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 // import SummarizeIcon from '@mui/icons-material/Summarize'; // Remove Summarize for now unless needed

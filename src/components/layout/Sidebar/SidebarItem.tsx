@@ -25,7 +25,7 @@ interface SidebarItemProps {
 const SidebarItem: React.FC<SidebarItemProps> = ({
   item,
   level = 0,
-  isNested = false,
+  // isNested = false,
   drawerOpen = true, // Default to true for backward compatibility
 }) => {
   const [menuOpen, setMenuOpen] = useState(false); // Renamed to avoid confusion

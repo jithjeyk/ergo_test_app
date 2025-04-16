@@ -14,7 +14,7 @@ import {
   LinearProgress,
   Divider,
   Button,
-  IconButton,
+  // IconButton,
   Paper,
   Tabs,
   Tab,
@@ -27,7 +27,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FilterAltOutlined from "@mui/icons-material/FilterAltOutlined";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+// import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PeopleIcon from '@mui/icons-material/People';
 import CachedIcon from '@mui/icons-material/Cached';
@@ -187,6 +187,7 @@ export default function Dashboard() {
   const [tabValue, setTabValue] = useState<number>(0);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    console.log(event);
     setTabValue(newValue);
   };
 

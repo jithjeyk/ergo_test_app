@@ -1,9 +1,9 @@
 import React from "react";
-import { Box, Alert, CircularProgress, Typography } from "@mui/material";
+import { Box, Alert, CircularProgress } from "@mui/material";
 
 // *** Import adapted components and types from src-new ***
 import ItemList from "./ItemList"; // Uses adapted ItemList
-import BreadcrumbsNavigation from "./BreadcrumbsNavigation"; // Uses src-new types
+// import BreadcrumbsNavigation from "./BreadcrumbsNavigation"; // Uses src-new types
 import { Pagination } from "../../../components/common/Pagination"; // Adjust path if needed
 import { Folder, File, BreadcrumbSegment } from "../../../types/document"; // Adjust path
 
@@ -33,13 +33,13 @@ interface ItemContentProps {
 
 export const ItemContent: React.FC<ItemContentProps> = ({
   items,
-  breadcrumbs,
+  // breadcrumbs,
   isLoading,
   error,
   currentPage,
   totalItems,
   itemsPerPage,
-  activeTab, // Removed
+  // activeTab, // Removed
   onPageChange,
   onFolderClick,
   onDocumentClick,

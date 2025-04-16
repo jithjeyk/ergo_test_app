@@ -22,7 +22,7 @@ import { formatBytes, formatDate } from "../utils/formatting";
 // import { CardProps } from "@mui/material";
 
 // Styled components
-const StyledCard = styled(Card)(({ theme }) => ({
+const StyledCard = styled(Card)({
   // Apply <CardProps> potentially if issues persist
   /* ... existing styles if any ... */
   // *** MOVE height style here ***
@@ -30,16 +30,16 @@ const StyledCard = styled(Card)(({ theme }) => ({
   // Ensure other necessary base styles are here
   display: "flex",
   flexDirection: "column",
-}));
+});
 
 // Define HeaderSection, IconBox, AvatarGroup (assuming these have simple styles)
-const HeaderSection = styled(Box)(({ theme }) => ({
+const HeaderSection = styled(Box)({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   // Ensure background color is defined if used via sx prop before
   // backgroundColor: alpha(theme.palette.primary.light, 0.1), // Example if it was in sx
-}));
+});
 const IconBox = styled(Box)({
   display: "flex",
   justifyContent: "center",

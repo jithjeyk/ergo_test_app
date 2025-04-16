@@ -3,7 +3,7 @@ import type {
     UUID,
     Folder as AppFolder, // Renamed to avoid conflict with native File type
     File as AppFile,     // Renamed to avoid conflict with native File type
-    FileSystemItem,
+    // FileSystemItem,
 } from '../types/document'; // Adjust path if necessary
 import { isFolder as isFolderGuard } from '../types/typeGuards'; // Import type guard
 

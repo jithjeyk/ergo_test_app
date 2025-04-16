@@ -25,7 +25,7 @@ i18n
   .use(initReactI18next)
   // Init i18next
   .init({
-    debug: process.env.NODE_ENV === 'development',
+    // debug: process.env.NODE_ENV === 'development',
     fallbackLng: 'en',
     supportedLngs: languages.map(lang => lang.code),
     interpolation: {

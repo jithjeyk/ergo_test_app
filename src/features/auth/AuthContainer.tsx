@@ -1,9 +1,9 @@
 import React from "react";
 import {
   AppBar,
-  Avatar,
+  // Avatar,
   Box,
-  Container,
+  // Container,
   IconButton,
   Toolbar,
   Typography,
@@ -11,7 +11,7 @@ import {
   useMediaQuery
 } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import Footer from "../../components/layout/Footer";
+// import Footer from "../../components/layout/Footer";
 import backgroundImage from "../../assets/images/dms-light-auth-background001.jpg"; // Adjust path as needed
 
 interface AuthContainerProps {

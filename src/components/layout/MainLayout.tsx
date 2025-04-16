@@ -10,7 +10,7 @@ import {
 import { Outlet } from "react-router-dom";
 
 import AppBarComponent from "./AppBar/index";
-import Footer from "./Footer/index";
+// import Footer from "./Footer/index";
 import Sidebar from "./Sidebar/index";
 
 const MainContent = styled(Box)<{ theme?: Theme }>(({ theme }) => ({

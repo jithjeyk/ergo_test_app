@@ -1,13 +1,13 @@
-import React, { useState, useCallback, useMemo } from "react"; // Added useMemo
+import React, { useState, useCallback } from "react"; // Added useMemo
 import { useSelector, useDispatch } from "react-redux";
 import {
   Box,
-  Dialog,
-  TextField,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button as MuiButton,
+  // Dialog,
+  // TextField,
+  // DialogActions,
+  // DialogContent,
+  // DialogTitle,
+  // Button as MuiButton,
   Typography,
 } from "@mui/material"; // Added Dialog elements
 
@@ -34,12 +34,12 @@ import {
   selectError,
   selectStatus,
   selectCurrentFolderId,
-  selectBreadcrumbs,
+  // selectBreadcrumbs,
   selectRootId,
 } from "../../store/fileManagerSelectors"; // Adjust path to src-new selectors
 import type { AppDispatch } from "../../store/store"; // Adjust path to src-new store
 import type { Folder, File, UUID } from "../../types/document"; // Adjust path to src-new types
-import { isFolder } from "../../types/typeGuards"; // Adjust path to src-new types
+// import { isFolder } from "../../types/typeGuards"; // Adjust path to src-new types
 import BreadcrumbsNavigation from "./components/BreadcrumbsNavigation";
 import { useTranslation } from "react-i18next";
 // Combine types
@@ -81,8 +81,7 @@ const MyDocumentsPage: React.FC = () => {
     error: displayError,
     ...displayProps
   } = useFileDisplay({ itemsPerPage: 15 }); // Use hook from src-new
-  const { navigateToFolder, navigateViaBreadcrumb, navigateUp, breadcrumbs } =
-    useFileNavigation(); // Use hook from src-new
+  const { navigateToFolder, breadcrumbs } = useFileNavigation(); // Use hook from src-new
 
   const { t } = useTranslation();
 
@@ -334,6 +333,8 @@ const MyDocumentsPage: React.FC = () => {
   // --- Event Handlers ---
   const handleTabChange = (event: React.SyntheticEvent, newValue: TabValue) => {
     // Only allow switching to 'all' for now, or add logic for other tabs later
+    console.log(event);
+
     if (newValue === "all") {
       setActiveTab(newValue);
     } else {
@@ -391,6 +392,8 @@ const MyDocumentsPage: React.FC = () => {
           .catch((err) => alert(`Rename failed: ${err.message || err}`)) // Show alert on failure
           .finally(() => setIsRenaming(false)); // Reset status
       }
+      console.log(renameItem, newItemName, isRenaming);
+
       setRenameItem(null); // Clear rename state
     },
     [dispatch]
@@ -481,6 +484,8 @@ const MyDocumentsPage: React.FC = () => {
         onDragOver={(e) => e.preventDefault()} // Basic handlers needed
         onDragLeave={(e) => e.preventDefault()}
         onDrop={(e) => {
+          console.log(e);
+          
           /* handled by getRootProps */
         }}
         onClose={() => {

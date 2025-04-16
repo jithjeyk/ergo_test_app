@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography, IconButton, Card, CardContent } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Folder } from '../../../types/types'; // Adjust path
-import { getIconForItem } from '../utils/getIconForItem'; // Adjust path
+// import { getIconForItem } from '../utils/getIconForItem'; // Adjust path
 
 interface FolderItemProps {
   folder: Folder;
