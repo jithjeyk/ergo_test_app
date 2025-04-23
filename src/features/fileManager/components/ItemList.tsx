@@ -23,7 +23,7 @@ import DocumentCard from "./DocumentCard"; // Uses File
 import FolderMenu from "./FolderMenu"; // Uses Folder
 import DocumentMenu from "./DocumentMenu"; // Uses File
 import { getIconForItem } from "../utils/getIconForItem"; // Uses File/Folder
-import { formatBytes, formatDate } from "../utils/formatting";
+import { formatBytes, formatDate } from "../../../utils/formatting"; // Adjust path
 import { useTranslation } from "react-i18next"; // For translation
 
 // Combine types

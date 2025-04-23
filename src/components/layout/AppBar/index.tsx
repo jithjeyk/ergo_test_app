@@ -1,26 +1,25 @@
-import React from 'react';
+import React, { useState, useContext } from "react";
 import {
   AppBar,
   AppBarProps as MuiAppBarProps,
   Toolbar,
-  // Typography,
   Box,
   IconButton,
   Avatar,
   styled,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Search as SearchIcon,
-  Notifications as NotificationsIcon,
-  DarkMode as DarkModeIcon,
   LightMode as LightModeIcon,
   Menu as MenuIcon,
-} from '@mui/icons-material';
-// import { useTheme } from '@mui/material/styles';
-import { useContext } from 'react';
-import { ThemeContext } from '../../../context/ThemeContext';
-import { AuthContext } from '../../../context/AuthContext';
-import { LanguageSwitcher } from '../../common/LanguageSwitcher';
+  TextsmsOutlined as TextsmsOutlinedIcon,
+  NotificationsNoneOutlined as NotificationsNoneOutlinedIcon,
+  DarkModeOutlined as DarkModeOutlinedIcon,
+} from "@mui/icons-material";
+import { ThemeContext } from "../../../context/ThemeContext";
+import { AuthContext } from "../../../context/AuthContext";
+import { LanguageSwitcher } from "../../common/LanguageSwitcher";
+import SidebarChat from "../../../features/chat/index";
 
 const drawerWidth = 240;
 
@@ -32,10 +31,10 @@ interface CustomAppBarProps extends MuiAppBarProps {
 
 // Styled AppBar with proper typing
 const StyledAppBar = styled(AppBar, {
-  shouldForwardProp: (prop) => prop !== 'open' && prop !== 'onDrawerOpen',
+  shouldForwardProp: (prop) => prop !== "open" && prop !== "onDrawerOpen",
 })<CustomAppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
+  transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
@@ -44,7 +43,7 @@ const StyledAppBar = styled(AppBar, {
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -52,55 +51,76 @@ const StyledAppBar = styled(AppBar, {
 }));
 
 const RightActionsContainer = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '16px',
-  marginLeft: 'auto',
+  display: "flex",
+  alignItems: "center",
+  gap: "16px",
+  marginLeft: "auto",
 });
 
-export const AppBarComponent: React.FC<CustomAppBarProps> = ({ open, onDrawerOpen }) => {
-  // const theme = useTheme();
+export const AppBarComponent: React.FC<CustomAppBarProps> = ({
+  open,
+  onDrawerOpen,
+}) => {
   const { toggleColorMode, mode } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
+  // Add state to track if chat sidebar is open
+  const [chatOpen, setChatOpen] = useState(false);
+
+  // Function to toggle chat sidebar
+  const toggleChat = () => {
+    setChatOpen((prevState) => !prevState);
+  };
 
   return (
-    <StyledAppBar position="fixed" open={open} onDrawerOpen={onDrawerOpen} >
-      <Toolbar>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          onClick={onDrawerOpen}
-          edge="start"
-          sx={{ marginRight: 5, ...(open && { display: 'none' }) }}
-        >
-          <MenuIcon />
-        </IconButton>
-        {/* <Typography variant="h6" noWrap component="div">
-          DMS App
-        </Typography> */}
-        <LanguageSwitcher />
-
-        <RightActionsContainer>
-          <IconButton>
-            <SearchIcon />
+    <>
+      <StyledAppBar position="fixed" open={open} onDrawerOpen={onDrawerOpen}>
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={onDrawerOpen}
+            edge="start"
+            sx={{ marginRight: 5, ...(open && { display: "none" }) }}
+          >
+            <MenuIcon />
           </IconButton>
+          <LanguageSwitcher />
 
-          <IconButton onClick={toggleColorMode}>
-            {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
-          </IconButton>
+          <RightActionsContainer>
+            <IconButton>
+              <SearchIcon />
+            </IconButton>
 
-          <IconButton>
-            <NotificationsIcon />
-          </IconButton>
+            <IconButton onClick={toggleChat}>
+              <TextsmsOutlinedIcon />
+            </IconButton>
 
-          <Avatar
-            alt={user?.name || 'User'}
-            src={user?.avatar}
-            sx={{ width: 32, height: 32 }}
-          />
-        </RightActionsContainer>
-      </Toolbar>
-    </StyledAppBar>
+            <IconButton onClick={toggleColorMode}>
+              {mode === "dark" ? <LightModeIcon /> : <DarkModeOutlinedIcon />}
+            </IconButton>
+
+            <IconButton>
+              <NotificationsNoneOutlinedIcon />
+            </IconButton>
+
+            <Avatar
+              alt={user?.name || "User"}
+              src={user?.avatar}
+              sx={{ width: 32, height: 32 }}
+            />
+          </RightActionsContainer>
+        </Toolbar>
+      </StyledAppBar>
+
+      {/* Chat Sidebar */}
+      <Box
+        className={`cart-sidebar bg-white border-start ${
+          chatOpen ? "shown" : "hidden"
+        }`}
+      >
+        <SidebarChat open={chatOpen} onDrawerClose={toggleChat} />
+      </Box>
+    </>
   );
 };
 

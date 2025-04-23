@@ -16,7 +16,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 // *** Ensure types are from src-new ***
 import { File as AppFile } from "../../../types/document"; // Use alias, Adjust path
 import { getIconForItem } from "../utils/getIconForItem"; // Adjust path
-import { formatBytes, formatDate } from "../utils/formatting";
+import { formatBytes, formatDate } from "../../../utils/formatting";
 
 // Correctly define CardProps type if needed for clarity/more complex scenarios
 // import { CardProps } from "@mui/material";

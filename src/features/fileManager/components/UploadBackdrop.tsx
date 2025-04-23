@@ -12,7 +12,7 @@ import {
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import FolderIcon from "@mui/icons-material/Folder";
 import CloseIcon from "@mui/icons-material/Close";
-import { formatBytes } from "../utils/formatting";
+import { formatBytes } from "../../../utils/formatting"; // Adjust path as necessary
 import { useTranslation } from "react-i18next";
 
 interface UploadBackdropProps {

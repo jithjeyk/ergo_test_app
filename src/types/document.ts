@@ -1,5 +1,5 @@
 export type UUID = string;
-type ISO8601Date = string; // e.g. "2025-04-07T15:30:00Z"
+export type ISO8601Date = string; // e.g. "2025-04-07T15:30:00Z"
 type MimeType = string; // e.g. "application/pdf", "image/jpeg"
 type FilePermission = "view" | "edit" | "comment" | "owner";
 type ShareStatus = "private" | "shared" | "public" | "organization";

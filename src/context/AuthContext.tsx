@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import authService from '../services/authService';
-import { UserPermission } from '../types/types';
+import { UserPermission, UserRole } from '../types/types';
 
 // User interface
 interface User {
@@ -8,7 +8,7 @@ interface User {
   email: string;
   name: string;
   avatar?: string;
-  role: string;
+  role: UserRole;
 }
 
 // AuthState interface

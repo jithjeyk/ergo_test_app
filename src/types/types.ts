@@ -18,6 +18,8 @@ export interface User {
   name: string;
   avatar?: string;
   role: UserRole;
+  isOnline?: boolean;
+  lastSeen?: Date | string; // Consider using ISO string for easier serialization
 }
 
 // Authentication-related permissions

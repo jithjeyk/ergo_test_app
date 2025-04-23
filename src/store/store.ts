@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import fileManagerReducer from './fileManagerSlice';
+import chatReducer from './chatSlice';
 // Import other reducers here if you have them
 
 export const store = configureStore({
   reducer: {
     fileManager: fileManagerReducer,
+    chat: chatReducer,
     // other reducers...
   },
   // Optional: Add middleware (e.g., logger in development)
