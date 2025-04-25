@@ -36,7 +36,7 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({ open }) => {
           alignItems: "center",
           justifyContent: "space-between",
           padding: open ? "16px" : "16px 0",
-          minHeight: 56,
+          minHeight: 73,
           boxSizing: "border-box",
         }}
       >

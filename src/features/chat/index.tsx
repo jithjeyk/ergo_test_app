@@ -1,8 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import Box from "@mui/material/Box";
-import ChatLayout from "./ChatLayout";
-// import IconButton from "@mui/material/IconButton";
-// import CloseIcon from "@mui/icons-material/Close";
+// import ChatLayout from "./ChatLayout";
 import { AuthContext } from "../../context/AuthContext";
 
 import "./chatStyle.css";
@@ -14,6 +12,7 @@ interface SidebarChatProps {
 
 const SidebarChat: React.FC<SidebarChatProps> = ({ open, onDrawerClose }) => {
   const { user } = useContext(AuthContext);
+  
   // Prevent body scrolling when chat is open
   useEffect(() => {
     if (open) {
@@ -41,18 +40,8 @@ const SidebarChat: React.FC<SidebarChatProps> = ({ open, onDrawerClose }) => {
       >
         {open && (
           <>
-            {/* <Box className="chat-header">
-              <IconButton
-                className="chat-close-btn"
-                onClick={onDrawerClose}
-                aria-label="Close chat"
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box> */}
-
-            <Box sx={{ mt: 6 }}>
-              <ChatLayout currentUser={user} />
+            <Box className="chat-content" sx={{ mt: { xs: 0, sm: 6 } }}>
+              {/* <ChatLayout currentUser={user} /> */}
             </Box>
           </>
         )}

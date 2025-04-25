@@ -80,7 +80,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   return (
     <Stack
       sx={{
-        height: "calc(100vh - 74px)", // Use viewport height to ensure full screen coverage
+        height: "calc(100vh - 66px)", // Use viewport height to ensure full screen coverage
         display: "flex",
         flexDirection: "column",
         overflow: "hidden", // Prevent Stack from scrolling

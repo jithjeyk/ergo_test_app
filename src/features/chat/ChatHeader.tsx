@@ -1,7 +1,12 @@
 // src/components/chat/ChatHeader.tsx
 import React from "react";
-import { useSelector } from "react-redux";
-import { selectChatState } from "../../store/chatSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectChatState,
+  selectIsMobile,
+  selectShowChat,
+  setShowChat,
+} from "../../store/chatSlice";
 import Avatar from "../../components/common/Avatar";
 import {
   Box,
@@ -14,14 +19,23 @@ import {
 // import PhoneIcon from '@mui/icons-material/Phone';
 // import VideocamIcon from '@mui/icons-material/Videocam';
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { formatTimeAgo } from "../../utils/dateUtils";
 
 interface ChatHeaderProps {
   conversationId: string;
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({ conversationId }) => {
+  const dispatch = useDispatch();
   const { conversations } = useSelector(selectChatState);
   const conversation = conversations[conversationId];
+  const isMobile = useSelector(selectIsMobile);
+  const showChat = useSelector(selectShowChat);
+
+  const handleBackToList = () => {
+    dispatch(setShowChat(false));
+  };
 
   if (!conversation) {
     return (
@@ -49,6 +63,22 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ conversationId }) => {
       sx={{ p: 0.3, borderBottom: 1, borderColor: "divider" }}
     >
       <Toolbar variant="dense" sx={{ minHeight: 64 }}>
+        {/* Mobile back button */}
+        {isMobile && showChat && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <IconButton
+              onClick={handleBackToList}
+              aria-label="Back to conversations"
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          </Box>
+        )}
         <Avatar
           src={participant.avatar || ""}
           alt={participant.name}
@@ -64,7 +94,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ conversationId }) => {
             {participant.isOnline
               ? "Online"
               : participant.lastSeen
-              ? `Last seen ${participant.lastSeen}`
+              ? `Last seen ${formatTimeAgo(participant.lastSeen)}`
               : "Offline"}
           </Typography>
         </Box>

@@ -55,13 +55,13 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <MainContent>
         <Toolbar /> {/* Create space below AppBar */}
         {children || <Outlet />}
-        <Box
+        {/* <Box
           sx={(theme) => ({
             borderTop: `1px solid ${theme.palette.divider}`,
           })}
         >
-          {/* <Footer /> */}
-        </Box>
+          <Footer />
+        </Box> */}
       </MainContent>
     </Box>
   );

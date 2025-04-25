@@ -2,7 +2,10 @@ import { lazy } from "react";
 import { UserPermission } from "../types/types";
 // Lazy-loaded components for better code splitting
 const Dashboard = lazy(() => import("../features/dashboard/DashboardPage"));
-const MyKnowledgeBase = lazy(() => import("../features/fileManager/MyDocumentsPage"));
+const MyKnowledgeBase = lazy(
+  () => import("../features/fileManager/MyDocumentsPage")
+);
+const ChatPage = lazy(() => import("../features/chat/ChatLayout"));
 // const UserManagement = lazy(() => import('../features/users/UserManagementPage'));
 // Add other page components
 
@@ -32,6 +35,19 @@ const routes: Route[] = [
   {
     path: "/myknowledgebase",
     component: MyKnowledgeBase,
+    exact: true,
+    requiresAuth: true,
+    permissions: [
+      UserPermission.ADMIN_ACCESS,
+      UserPermission.READ,
+      UserPermission.WRITE,
+      UserPermission.DELETE,
+      UserPermission.UPDATE,
+    ],
+  },
+  {
+    path: "/chats",
+    component: ChatPage,
     exact: true,
     requiresAuth: true,
     permissions: [

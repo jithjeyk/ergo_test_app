@@ -1,64 +1,115 @@
-// src/features/chat/ChatLayout.tsx
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectAllConversations,
   selectCurrentConversationId,
   setCurrentConversation,
+  selectIsMobile,
+  selectShowChat,
+  setIsMobile,
+  setShowChat,
 } from "../../store/chatSlice";
 import ChatSidebar from "./ChatSidebar";
-import ChatAppBar from "./ChatAppBar";
 import ChatWindow from "./ChatWindow";
 import EmptyChatState from "./EmptyChatState";
 import ChatDataInitializer from "./ChatDataInitializer";
-import { User } from "../../types/types";
-import { Box, CircularProgress, Stack } from "@mui/material";
+import { AuthContext } from "../../context/AuthContext";
+import {
+  Box,
+  CircularProgress,
+  Stack,
+  useTheme,
+} from "@mui/material";
 
-interface ChatLayoutProps {
-  currentUser: User | null;
-}
-
-const ChatLayout: React.FC<ChatLayoutProps> = ({ currentUser }) => {
+const ChatLayout: React.FC = () => {
+  const { user } = useContext(AuthContext);
   const dispatch = useDispatch();
   const conversations = useSelector(selectAllConversations);
   const currentConversationId = useSelector(selectCurrentConversationId);
+  const theme = useTheme();
+  const isMobile = useSelector(selectIsMobile);
+  const showChat = useSelector(selectShowChat);
 
-  // Auto-select first conversation if none is selected
+  // Update the media query effect to dispatch to store
   useEffect(() => {
-    console.log("conversations", conversations);
+    const handleResize = () => {
+      const mobileView = !!(
+        window.matchMedia &&
+        window.matchMedia(theme.breakpoints.down("sm").replace("@media ", ""))
+          .matches
+      );
+      dispatch(setIsMobile(mobileView));
+    };
 
-    if (!currentConversationId && conversations.length > 0) {
-      dispatch(setCurrentConversation(conversations[0].id));
+    // Initialize on mount
+    handleResize();
+
+    // Add resize listener
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [dispatch, theme.breakpoints]);
+
+  // Handle responsive behavior
+  useEffect(() => {
+    if (!isMobile) {
+      // On larger screens, always show chat if one is selected
+      if (currentConversationId) {
+        dispatch(setShowChat(true));
+      }
+    } else {
+      // On mobile, only show chat if conversation is selected
+      dispatch(setShowChat(!!currentConversationId));
     }
-  }, [conversations, currentConversationId, dispatch]);
+  }, [isMobile, currentConversationId, dispatch]);
+
+  // Handle conversation selection
+  const handleConversationSelect = (conversationId: string) => {
+    dispatch(setCurrentConversation(conversationId));
+  };
 
   return (
     <>
-      {/* Invisible component that initializes our sample data if needed */}
-      <ChatDataInitializer currentUser={currentUser} />
+      {/* Pass the user from context to initializer */}
+      <ChatDataInitializer currentUser={user} />
 
       <Box
         sx={{
           display: "flex",
-          // height: '100%',
-          bgcolor: "background.default", // Use theme background color
-          overflow: "hidden", // Prevent scrolling of the entire layout
+          flexDirection: { xs: "column", sm: "row" },
+          // height: "100%",
+          bgcolor: "background.default",
+          overflow: "hidden",
         }}
       >
-        <ChatAppBar />
+        {/* Sidebar for conversations - hide on mobile when chat is shown */}
+        <Box
+          sx={{
+            // On mobile: hide sidebar when showing chat
+            // On tablet/desktop: always show sidebar
+            display: isMobile && showChat ? "none" : "block",
+            maxWidth: { sm: "320px", md: "380px" },
+            borderRight: `1px solid ${theme.palette.divider}`,
+            height: `calc(100vh - ${isMobile ? "58px" : "66px"})`,
+            overflow: "auto",
+          }}
+        >
+          <ChatSidebar
+            conversations={conversations}
+            currentConversationId={currentConversationId}
+            currentUser={user}
+            onSelectConversation={handleConversationSelect}
+          />
+        </Box>
 
-        {/* Sidebar for conversations */}
-        <ChatSidebar
-          conversations={conversations}
-          currentConversationId={currentConversationId}
-          currentUser={currentUser}
-        />
-
+        {/* Chat window area */}
         <Stack
           sx={{
             flexGrow: 1,
-            position: "relative", // For loading indicator positioning
-            overflow: "hidden", // Prevent content overflow
+            position: "relative",
+            overflow: "hidden",
+            // On mobile: show chat window only when a conversation is selected and showChat is true
+            // On tablet/desktop: always show chat window area
+            display: isMobile ? (showChat ? "flex" : "none") : "flex",
           }}
         >
           {conversations.length === 0 ? (
@@ -67,7 +118,7 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ currentUser }) => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "100%",
+                height: "100%", // Added to center the loading spinner vertically
               }}
             >
               <CircularProgress size={40} color="primary" />
@@ -75,7 +126,7 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ currentUser }) => {
           ) : currentConversationId ? (
             <ChatWindow
               conversationId={currentConversationId}
-              currentUser={currentUser}
+              currentUser={user}
             />
           ) : (
             <EmptyChatState />

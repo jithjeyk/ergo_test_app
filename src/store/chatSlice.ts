@@ -26,6 +26,8 @@ interface ChatState {
   typingIndicators: Record<UUID, Record<string, boolean>>;
   status: "idle" | "loading" | "succeeded" | "failed"; // Simplified status
   error: string | null;
+  isMobile: boolean;
+  showChat: boolean;
 }
 
 // Load initial state from localStorage
@@ -44,6 +46,8 @@ const loadInitialState = (): ChatState => {
     typingIndicators: {},
     status: "idle", // Start as idle, set to succeeded after initial load maybe?
     error: null,
+    isMobile: false, // Will be updated based on media query
+    showChat: false,
   };
 };
 
@@ -170,14 +174,29 @@ const chatSlice = createSlice({
         }
       }
     },
+    setIsMobile: (state, action: PayloadAction<boolean>) => {
+      state.isMobile = action.payload;
+      // Auto-adjust showChat when screen size changes
+      // On desktop, always show chat if conversation is selected
+      if (!action.payload && state.currentConversationId) {
+        state.showChat = true;
+      }
+    },
+
+    setShowChat: (state, action: PayloadAction<boolean>) => {
+      state.showChat = action.payload;
+    },
+
     // Action to set the currently viewed conversation
     setCurrentConversation: (state, action: PayloadAction<UUID | null>) => {
       state.currentConversationId = action.payload;
-      // Reset unread count simulation (less relevant without real-time)
+      // Reset unread count
       if (action.payload && state.conversations[action.payload]) {
         state.conversations[action.payload].unreadCount = 0;
-        // Persist this change to unread count immediately if needed
-        // saveLocalConversation(state.conversations[action.payload]); // Update the convo in storage
+      }
+      // Auto-show chat when a conversation is selected
+      if (action.payload) {
+        state.showChat = true;
       }
     },
     // Standard status/error handling
@@ -200,6 +219,8 @@ export const {
   setCurrentConversation,
   setStatus,
   setError,
+  setIsMobile,
+  setShowChat,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
@@ -239,6 +260,10 @@ export const selectMessagesMap = (state: { chat: ChatState }) =>
   state.chat.messages;
 export const selectTypingIndicatorsMap = (state: { chat: ChatState }) =>
   state.chat.typingIndicators;
+export const selectIsMobile = (state: { chat: ChatState }) =>
+  state.chat.isMobile;
+export const selectShowChat = (state: { chat: ChatState }) =>
+  state.chat.showChat;
 
 // Memoized selectors
 export const selectAllConversations = createSelector(
@@ -260,7 +285,7 @@ export const selectMessagesForCurrentConversation = createSelector(
   [selectMessagesMap, selectCurrentConversationId],
   (messages, currentId) => {
     console.log("messages slice", messages);
-    
+
     if (!currentId || !messages[currentId]) return [];
     return Object.values(messages[currentId]).sort(
       (a, b) =>

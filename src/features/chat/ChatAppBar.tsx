@@ -1,190 +1,309 @@
-import { useState } from 'react';
-import { 
-  Box, 
-  List, 
-  ListItem, 
-  ListItemButton, 
-  ListItemIcon, 
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
   ListItemText,
-  Divider,
+  // Divider,
   Avatar,
-  styled
-} from '@mui/material';
-import { 
-  ChatBubbleOutline, 
-  Work, 
-  Chat, 
-  BookmarkBorder, 
-  CalendarMonth, 
-  FolderOutlined,
-  Settings 
-} from '@mui/icons-material';
+  styled,
+  useMediaQuery,
+  // Theme
+} from "@mui/material";
+import {
+  ChatBubbleOutline,
+  GroupWorkOutlined,
+  ChatOutlined,
+  // BookmarkBorder,
+  // CalendarMonth,
+  // FolderOutlined,
+  SettingsOutlined,
+} from "@mui/icons-material";
+import { selectIsMobile } from "../../store/chatSlice";
+interface NavItemProps {
+  active?: boolean;
+  isTab?: boolean;
+}
 
-const SidebarContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    height: 'calc(100vh - 54px)',
-    backgroundColor: theme.palette.background.default,
-    width: '80px',
-    borderRight: `1px solid ${theme.palette.divider}`,
-    overflowY: 'auto',
-    alignItems: 'center',
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.05)'
+const SidebarContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "isTab",
+})<{ isTab: boolean }>(({ theme, isTab }) => ({
+  display: "flex",
+  flexDirection: isTab ? "row" : "column",
+  height: isTab ? "72px" : "100%",
+  width: isTab ? "100%" : "80px",
+  backgroundColor: theme.palette.background.default,
+  borderRight: isTab ? "none" : `1px solid ${theme.palette.divider}`,
+  borderTop: isTab ? `1px solid ${theme.palette.divider}` : "none",
+  overflowY: isTab ? "hidden" : "auto",
+  overflowX: isTab ? "auto" : "hidden",
+  alignItems: "center",
+  padding: isTab ? theme.spacing(0, 1) : theme.spacing(2, 0),
+  boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.05)",
+  position: isTab ? "absolute" : "relative",
+  bottom: isTab ? 0 : "auto",
+  left: 0,
+  zIndex: isTab ? 1100 : "auto",
 }));
 
-const NavItem = styled(ListItemButton)<{ active?: boolean }>(({ theme, active }) => ({
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing(1.5),
-    borderRadius: '12px',
-    margin: '4px 0',
-    minWidth: '64px',
-    "&:hover": {
-        backgroundColor: theme.palette.action.hover
+const NavItem = styled(ListItemButton, {
+  shouldForwardProp: (prop) => prop !== "active" && prop !== "isTab",
+})<NavItemProps>(({ theme, active, isTab }) => ({
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: theme.spacing(1),
+  borderRadius: "12px",
+  margin: isTab ? "0 4px" : "4px 0",
+  minWidth: isTab ? "auto" : "64px",
+  "&:hover": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  ...(active && {
+    color: theme.palette.primary.main,
+    "& .MuiListItemIcon-root": {
+      color: theme.palette.primary.main,
     },
-    ...(active && {
-        color: theme.palette.primary.main,
-        "& .MuiListItemIcon-root": {
-            color: theme.palette.primary.main
-        },
-        "& .MuiListItemText-primary": {
-            color: theme.palette.primary.main,
-            fontWeight: 600
-        }
-    })
+    "& .MuiListItemText-primary": {
+      color: theme.palette.primary.main,
+      fontWeight: 600,
+    },
+  }),
 }));
 
 const IconContainer = styled(ListItemIcon)({
-  minWidth: 'auto',
-  marginBottom: '4px',
-  justifyContent: 'center'
+  minWidth: "auto",
+  marginBottom: "4px",
+  justifyContent: "center",
 });
 
 const ItemText = styled(ListItemText)({
   margin: 0,
   "& .MuiTypography-root": {
-    fontSize: '0.75rem',
-    textAlign: 'center'
-  }
+    fontSize: "0.75rem",
+    textAlign: "center",
+  },
 });
 
-const StyledDivider = styled(Divider)({
-  width: '80%',
-  margin: '16px auto'
-});
+// const StyledDivider = styled(Divider, {
+//   shouldForwardProp: (prop) => prop !== 'isTab'
+// })<{ isTab: boolean }>(({ isTab }) => ({
+//   width: isTab ? '1px' : '80%',
+//   height: isTab ? '40px' : 'auto',
+//   margin: isTab ? '0 8px' : '16px auto'
+// }));
+
+const ListContainer = styled(List, {
+  shouldForwardProp: (prop) => prop !== "isTab" && prop !== "isMobile",
+})<{ isTab: boolean, isMobile?: boolean }>(({ isTab, isMobile }) => ({
+  width: isMobile ? "100%" : "auto",
+  padding: isTab ? 0 : 8,
+  display: "flex",
+  flexDirection: isTab ? "row" : "column",
+  justifyContent: isMobile ? "space-around" : "center",
+  alignItems: "center",
+}));
 
 const ChatAppBar = () => {
-  const [activeItem, setActiveItem] = useState('work');
+  const [activeItem, setActiveItem] = useState("allChats");
+  const isTab = useMediaQuery("(max-width: 992px)");
+  const [mounted, setMounted] = useState(false);
+  const isMobile = useSelector(selectIsMobile);
 
-const handleItemClick = (itemId: string) => {
+  // Handle SSR/hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Render null during SSR to prevent hydration mismatch
+  if (!mounted) return null;
+
+  const handleItemClick = (itemId: string) => {
     setActiveItem(itemId);
-};
+  };
+
+  // Avatar placement changes based on mobile/desktop
+  const AvatarComponent = () => (
+    <Box sx={isTab ? { mx: 1 } : { mb: 4, mt: 1 }}>
+      <Avatar
+        src="https://mui.com/static/images/avatar/1.jpg"
+        alt="User profile"
+        sx={{ width: 36, height: 36 }}
+      />
+    </Box>
+  );
 
   return (
-    <SidebarContainer>
-      <Box sx={{ mb: 4, mt: 1 }}>
-        <Avatar
-          src="https://mui.com/static/images/avatar/1.jpg"
-          sx={{ width: 36, height: 36 }}
-        />
-      </Box>
-      
-      <List sx={{ width: '100%', p: 1 }}>
-        <ListItem disablePadding sx={{ display: 'block' }}>
-          <NavItem 
-            active={activeItem === 'allChats'}
-            onClick={() => handleItemClick('allChats')}
+    <SidebarContainer
+      isTab={isTab}
+      role="navigation"
+      aria-label="Main Navigation"
+    >
+      {!isTab && <AvatarComponent />}
+
+      <ListContainer isTab={isTab} isMobile={isMobile}>
+        {/* {isTab && <AvatarComponent />} */}
+
+        <ListItem
+          disablePadding
+          sx={{ display: "block", width: isTab ? "auto" : "100%" }}
+        >
+          <NavItem
+            active={activeItem === "allChats"}
+            isTab={isTab}
+            onClick={() => handleItemClick("allChats")}
+            aria-label="All chats"
           >
             <IconContainer>
-              <ChatBubbleOutline />
+              <ChatBubbleOutline fontSize={isTab ? "small" : "medium"} />
             </IconContainer>
-            <ItemText primary="All chats" primaryTypographyProps={{ noWrap: true }} />
+            <ItemText
+              primary="All chats"
+              primaryTypographyProps={{ noWrap: true }}
+            />
           </NavItem>
         </ListItem>
-        
-        <ListItem disablePadding sx={{ display: 'block' }}>
-          <NavItem 
-            active={activeItem === 'work'} 
-            onClick={() => handleItemClick('work')}
+
+        <ListItem
+          disablePadding
+          sx={{ display: "block", width: isTab ? "auto" : "100%" }}
+        >
+          <NavItem
+            active={activeItem === "personal"}
+            isTab={isTab}
+            onClick={() => handleItemClick("personal")}
+            aria-label="Personal"
           >
             <IconContainer>
-              <Work />
+              <ChatOutlined fontSize={isTab ? "small" : "medium"} />
             </IconContainer>
-            <ItemText primary="Work" primaryTypographyProps={{ noWrap: true }} />
+            <ItemText
+              primary="Personal"
+              primaryTypographyProps={{ noWrap: true }}
+            />
           </NavItem>
         </ListItem>
-        
-        <ListItem disablePadding sx={{ display: 'block' }}>
-          <NavItem 
-            active={activeItem === 'personal'} 
-            onClick={() => handleItemClick('personal')}
+
+        <ListItem
+          disablePadding
+          sx={{ display: "block", width: isTab ? "auto" : "100%" }}
+        >
+          <NavItem
+            active={activeItem === "group"}
+            isTab={isTab}
+            onClick={() => handleItemClick("group")}
+            aria-label="Group"
           >
             <IconContainer>
-              <Chat />
+              <GroupWorkOutlined fontSize={isTab ? "small" : "medium"} />
             </IconContainer>
-            <ItemText primary="Personal" primaryTypographyProps={{ noWrap: true }} />
+            <ItemText
+              primary="Group"
+              primaryTypographyProps={{ noWrap: true }}
+            />
           </NavItem>
         </ListItem>
-        
-        <ListItem disablePadding sx={{ display: 'block' }}>
+
+        {isTab && (
+          <ListItem
+            disablePadding
+            sx={{ display: "block", width: isTab ? "auto" : "100%" }}
+          >
+            <NavItem
+              active={activeItem === "settings"}
+              isTab={isTab}
+              onClick={() => handleItemClick("settings")}
+              aria-label="Settings"
+            >
+              <IconContainer>
+                <SettingsOutlined fontSize={isTab ? "small" : "medium"} />
+              </IconContainer>
+              <ItemText
+                primary="Settings"
+                primaryTypographyProps={{ noWrap: true }}
+              />
+            </NavItem>
+          </ListItem>
+        )}
+
+        {/* <ListItem disablePadding sx={{ display: 'block', width: isTab ? 'auto' : '100%' }}>
           <NavItem 
             active={activeItem === 'saved'} 
+            isTab={isTab}
             onClick={() => handleItemClick('saved')}
+            aria-label="Saved"
           >
             <IconContainer>
-              <BookmarkBorder />
+              <BookmarkBorder fontSize={isTab ? 'small' : 'medium'} />
             </IconContainer>
             <ItemText primary="Saved" primaryTypographyProps={{ noWrap: true }} />
           </NavItem>
-        </ListItem>
-      </List>
+        </ListItem> */}
+      </ListContainer>
+
+      {/* <StyledDivider isTab={isTab} orientation={isTab ? 'vertical' : 'horizontal'} />
       
-      <StyledDivider />
-      
-      <List sx={{ width: '100%', p: 1 }}>
-        <ListItem disablePadding sx={{ display: 'block' }}>
+      <ListContainer isTab={isTab}>
+        <ListItem disablePadding sx={{ display: 'block', width: isTab ? 'auto' : '100%' }}>
           <NavItem 
             active={activeItem === 'calendar'} 
+            isTab={isTab}
             onClick={() => handleItemClick('calendar')}
+            aria-label="Calendar"
           >
             <IconContainer>
-              <CalendarMonth />
+              <CalendarMonth fontSize={isTab ? 'small' : 'medium'} />
             </IconContainer>
             <ItemText primary="Calendar" primaryTypographyProps={{ noWrap: true }} />
           </NavItem>
         </ListItem>
         
-        <ListItem disablePadding sx={{ display: 'block' }}>
+        <ListItem disablePadding sx={{ display: 'block', width: isTab ? 'auto' : '100%' }}>
           <NavItem 
             active={activeItem === 'files'} 
+            isTab={isTab}
             onClick={() => handleItemClick('files')}
+            aria-label="Files"
           >
             <IconContainer>
-              <FolderOutlined />
+              <FolderOutlined fontSize={isTab ? 'small' : 'medium'} />
             </IconContainer>
             <ItemText primary="Files" primaryTypographyProps={{ noWrap: true }} />
           </NavItem>
         </ListItem>
-      </List>
-      
-      <Box sx={{ flexGrow: 1 }} />
-      
-      <List sx={{ width: '100%', p: 1 }}>
-        <ListItem disablePadding sx={{ display: 'block' }}>
-          <NavItem 
-            active={activeItem === 'settings'} 
-            onClick={() => handleItemClick('settings')}
+      </ListContainer> */}
+
+      {!isTab && <Box sx={{ flexGrow: 1 }} />}
+
+      {/* {isTab ? (
+        <StyledDivider isTab={isTab} orientation="vertical" />
+      ) : null} */}
+      {!isTab && (
+        <ListContainer isTab={isTab}>
+          <ListItem
+            disablePadding
+            sx={{ display: "block", width: isTab ? "auto" : "100%" }}
           >
-            <IconContainer>
-              <Settings />
-            </IconContainer>
-            <ItemText primary="Settings" primaryTypographyProps={{ noWrap: true }} />
-          </NavItem>
-        </ListItem>
-      </List>
+            <NavItem
+              active={activeItem === "settings"}
+              isTab={isTab}
+              onClick={() => handleItemClick("settings")}
+              aria-label="Settings"
+            >
+              <IconContainer>
+                <SettingsOutlined fontSize={isTab ? "small" : "medium"} />
+              </IconContainer>
+              <ItemText
+                primary="Settings"
+                primaryTypographyProps={{ noWrap: true }}
+              />
+            </NavItem>
+          </ListItem>
+        </ListContainer>
+      )}
     </SidebarContainer>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import {
   AppBar,
   AppBarProps as MuiAppBarProps,
@@ -16,10 +16,10 @@ import {
   NotificationsNoneOutlined as NotificationsNoneOutlinedIcon,
   DarkModeOutlined as DarkModeOutlinedIcon,
 } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { AuthContext } from "../../../context/AuthContext";
 import { LanguageSwitcher } from "../../common/LanguageSwitcher";
-import SidebarChat from "../../../features/chat/index";
 
 const drawerWidth = 240;
 
@@ -63,12 +63,17 @@ export const AppBarComponent: React.FC<CustomAppBarProps> = ({
 }) => {
   const { toggleColorMode, mode } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   // Add state to track if chat sidebar is open
-  const [chatOpen, setChatOpen] = useState(false);
 
   // Function to toggle chat sidebar
   const toggleChat = () => {
-    setChatOpen((prevState) => !prevState);
+    console.log("Chat toggled");
+    navigate("/chats");
+    if (open) {
+      onDrawerOpen();
+    }
   };
 
   return (
@@ -111,15 +116,6 @@ export const AppBarComponent: React.FC<CustomAppBarProps> = ({
           </RightActionsContainer>
         </Toolbar>
       </StyledAppBar>
-
-      {/* Chat Sidebar */}
-      <Box
-        className={`cart-sidebar bg-white border-start ${
-          chatOpen ? "shown" : "hidden"
-        }`}
-      >
-        <SidebarChat open={chatOpen} onDrawerClose={toggleChat} />
-      </Box>
     </>
   );
 };
