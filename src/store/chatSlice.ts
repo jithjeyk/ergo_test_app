@@ -1,30 +1,35 @@
-// src/store/chatSlice.ts
 import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
 import type {
   Conversation,
   Message,
   Participant,
   TypingIndicator,
+  GroupChatCreationParams,
+  GroupChatUpdateParams,
+  GroupMemberOperation
 } from "../types/chat";
 import type { UUID } from "../types/document";
-import type { User } from "../types/types"; //
+import type { User } from "../types/types";
 import {
   getLocalConversations,
   getLocalMessagesForConversation,
   saveLocalMessage,
   saveLocalConversation,
-  //   saveLocalConversations, // Added for convenience if needed
-  //   saveLocalMessagesForConversation, // Added for convenience if needed
-} from "../services/chatService"; // Import localStorage functions
+  createGroupChat as createGroupChatService,
+  updateGroupChat as updateGroupChatService,
+  addGroupMember as addGroupMemberService,
+  removeGroupMember as removeGroupMemberService,
+  updateMemberRole as updateMemberRoleService,
+  markConversationAsRead as markConversationAsReadService
+} from "../services/chatService";
 
 interface ChatState {
   conversations: Record<UUID, Conversation>;
-  messages: Record<UUID, Record<UUID, Message>>; // { [conversationId]: { [messageId]: Message } }
+  messages: Record<UUID, Record<UUID, Message>>;
   currentConversationId: UUID | null;
-  // Participants can be derived from conversations or stored if needed globally
   participants: Record<UUID, Participant>;
   typingIndicators: Record<UUID, Record<string, boolean>>;
-  status: "idle" | "loading" | "succeeded" | "failed"; // Simplified status
+  status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
   isMobile: boolean;
   showChat: boolean;
@@ -44,9 +49,9 @@ const loadInitialState = (): ChatState => {
     currentConversationId: null,
     participants: {},
     typingIndicators: {},
-    status: "idle", // Start as idle, set to succeeded after initial load maybe?
+    status: "idle",
     error: null,
-    isMobile: false, // Will be updated based on media query
+    isMobile: false,
     showChat: false,
   };
 };
@@ -64,9 +69,10 @@ const chatSlice = createSlice({
         conversationId: UUID;
         content: string;
         currentUser: User | null;
+        mentionedUserIds?: UUID[];
       }>
     ) => {
-      const { conversationId, content, currentUser } = action.payload;
+      const { conversationId, content, currentUser, mentionedUserIds } = action.payload;
       if (!currentUser) {
         state.status = "failed";
         state.error = "User not logged in";
@@ -82,16 +88,25 @@ const chatSlice = createSlice({
         return;
       }
 
-      const tempId = `temp_${Date.now()}`; // Generate temporary ID for optimistic update
+      const conversation = state.conversations[conversationId];
+      const tempId = `temp_${Date.now()}`;
+      
+      // For group chats, we don't need a specific recipientId
+      const recipientId = conversation.type === 'one-to-one' 
+        ? conversation.participants.find(p => p.id !== currentUser.id)?.id
+        : undefined;
+
       const optimisticMessage: Message = {
         id: tempId,
         conversationId,
-        senderId: currentUser.id, // Use current user's ID
-        recipientId: state.conversations[conversationId].participants[0].id, // Assuming one-to-one chat
+        senderId: currentUser.id,
+        recipientId,
         content,
         timestamp: new Date().toISOString(),
         isRead: false,
-        status: "sending", // Optimistic status
+        status: "sending",
+        mentionedUserIds,
+        readBy: { [currentUser.id]: new Date().toISOString() } // Mark as read by sender
       };
 
       // Optimistic UI update
@@ -99,42 +114,215 @@ const chatSlice = createSlice({
         state.messages[conversationId] = {};
       }
       state.messages[conversationId][optimisticMessage.id] = optimisticMessage;
-      state.conversations[conversationId].lastMessage = optimisticMessage; // Update preview optimistically
-      state.conversations[conversationId].updatedAt =
-        optimisticMessage.timestamp;
+      state.conversations[conversationId].lastMessage = optimisticMessage;
+      state.conversations[conversationId].updatedAt = optimisticMessage.timestamp;
 
-      // Persist to localStorage using the service
-      // Note: saveLocalMessage handles updating the conversation's lastMessage in storage too
       try {
-        // The service function now sets the 'sent' status and final timestamp
         const savedMessage = saveLocalMessage(optimisticMessage, currentUser);
-
-        // Update the message in state with the final version from storage
-        // (replace optimistic one, potentially correcting ID if needed, though unlikely here)
-        delete state.messages[conversationId][tempId]; // Remove temp message
-        state.messages[conversationId][savedMessage.id] = savedMessage; // Add final message
-        state.conversations[conversationId].lastMessage = savedMessage; // Update preview with final message
+        delete state.messages[conversationId][tempId];
+        state.messages[conversationId][savedMessage.id] = savedMessage;
+        state.conversations[conversationId].lastMessage = savedMessage;
         state.status = "succeeded";
         state.error = null;
       } catch (error: any) {
         state.status = "failed";
         state.error = error.message || "Failed to save message locally";
-        // Revert optimistic update or mark message as failed
         if (state.messages[conversationId]?.[tempId]) {
           state.messages[conversationId][tempId].status = "failed";
-          // Optionally revert conversation lastMessage update if needed
         }
         console.error("Error saving message to localStorage:", error);
       }
     },
+    
     // Action to add/update a conversation and persist it
     upsertConversation: (state, action: PayloadAction<Conversation>) => {
       const conversation = action.payload;
       state.conversations[conversation.id] = conversation;
-      // Persist the single conversation
-      saveLocalConversation(conversation); // Assumes this service function exists
+      saveLocalConversation(conversation);
       state.status = "succeeded";
     },
+    
+    // Create a new group chat
+    createGroupChat: (
+      state,
+      action: PayloadAction<{
+        params: GroupChatCreationParams;
+        currentUser: User | null;
+      }>
+    ) => {
+      const { params, currentUser } = action.payload;
+      
+      try {
+        const newGroupChat = createGroupChatService(params, currentUser);
+        if (newGroupChat) {
+          state.conversations[newGroupChat.id] = newGroupChat;
+          state.messages[newGroupChat.id] = {};
+          state.status = "succeeded";
+          state.error = null;
+        } else {
+          state.status = "failed";
+          state.error = "Failed to create group chat";
+        }
+      } catch (error: any) {
+        state.status = "failed";
+        state.error = error.message || "Failed to create group chat";
+        console.error("Error creating group chat:", error);
+      }
+    },
+    
+    // Update group chat details
+    updateGroupChat: (
+      state,
+      action: PayloadAction<{
+        params: GroupChatUpdateParams;
+        currentUser: User | null;
+      }>
+    ) => {
+      const { params, currentUser } = action.payload;
+      
+      try {
+        const updatedGroupChat = updateGroupChatService(params, currentUser);
+        if (updatedGroupChat) {
+          state.conversations[updatedGroupChat.id] = updatedGroupChat;
+          state.status = "succeeded";
+          state.error = null;
+        } else {
+          state.status = "failed";
+          state.error = "Failed to update group chat";
+        }
+      } catch (error: any) {
+        state.status = "failed";
+        state.error = error.message || "Failed to update group chat";
+        console.error("Error updating group chat:", error);
+      }
+    },
+    
+    // Add a member to a group
+    addGroupMember: (
+      state,
+      action: PayloadAction<{
+        operation: GroupMemberOperation;
+        currentUser: User | null;
+      }>
+    ) => {
+      const { operation, currentUser } = action.payload;
+      
+      try {
+        const updatedGroupChat = addGroupMemberService(operation, currentUser);
+        if (updatedGroupChat) {
+          state.conversations[updatedGroupChat.id] = updatedGroupChat;
+          state.status = "succeeded";
+          state.error = null;
+        } else {
+          state.status = "failed";
+          state.error = "Failed to add member to group chat";
+        }
+      } catch (error: any) {
+        state.status = "failed";
+        state.error = error.message || "Failed to add member to group chat";
+        console.error("Error adding member to group chat:", error);
+      }
+    },
+    
+    // Remove a member from a group
+    removeGroupMember: (
+      state,
+      action: PayloadAction<{
+        operation: GroupMemberOperation;
+        currentUser: User | null;
+      }>
+    ) => {
+      const { operation, currentUser } = action.payload;
+      
+      try {
+        const updatedGroupChat = removeGroupMemberService(operation, currentUser);
+        if (updatedGroupChat) {
+          state.conversations[updatedGroupChat.id] = updatedGroupChat;
+          state.status = "succeeded";
+          state.error = null;
+        } else {
+          state.status = "failed";
+          state.error = "Failed to remove member from group chat";
+        }
+      } catch (error: any) {
+        state.status = "failed";
+        state.error = error.message || "Failed to remove member from group chat";
+        console.error("Error removing member from group chat:", error);
+      }
+    },
+    
+    // Update a member's role in a group
+    updateMemberRole: (
+      state,
+      action: PayloadAction<{
+        operation: GroupMemberOperation;
+        currentUser: User | null;
+      }>
+    ) => {
+      const { operation, currentUser } = action.payload;
+      
+      try {
+        const updatedGroupChat = updateMemberRoleService(operation, currentUser);
+        if (updatedGroupChat) {
+          state.conversations[updatedGroupChat.id] = updatedGroupChat;
+          state.status = "succeeded";
+          state.error = null;
+        } else {
+          state.status = "failed";
+          state.error = "Failed to update member role in group chat";
+        }
+      } catch (error: any) {
+        state.status = "failed";
+        state.error = error.message || "Failed to update member role in group chat";
+        console.error("Error updating member role in group chat:", error);
+      }
+    },
+    
+    // Mark conversation as read
+    markConversationAsRead: (
+      state,
+      action: PayloadAction<{
+        conversationId: UUID;
+        currentUser: User | null;
+      }>
+    ) => {
+      const { conversationId, currentUser } = action.payload;
+      
+      if (!currentUser || !state.conversations[conversationId]) {
+        return;
+      }
+      
+      try {
+        markConversationAsReadService(conversationId, currentUser);
+        state.conversations[conversationId].unreadCount = 0;
+        
+        // Update read status in state
+        if (state.messages[conversationId]) {
+          Object.keys(state.messages[conversationId]).forEach(messageId => {
+            const message = state.messages[conversationId][messageId];
+            
+            // Don't mark your own messages as read
+            if (message.senderId === currentUser.id) {
+              return;
+            }
+            
+            if (!message.readBy) {
+              message.readBy = {};
+            }
+            
+            message.readBy[currentUser.id] = new Date().toISOString();
+          });
+        }
+        
+        state.status = "succeeded";
+        state.error = null;
+      } catch (error: any) {
+        state.status = "failed";
+        state.error = error.message || "Failed to mark conversation as read";
+        console.error("Error marking conversation as read:", error);
+      }
+    },
+    
     // Update typing indicator status
     updateTypingIndicator: (state, action: PayloadAction<TypingIndicator>) => {
       const { conversationId, userId, isTyping } = action.payload;
@@ -145,19 +333,17 @@ const chatSlice = createSlice({
         state.typingIndicators[conversationId][userId] = isTyping;
       } else {
         delete state.typingIndicators[conversationId][userId];
-        // Clean up the conversation entry if no one is typing
         if (Object.keys(state.typingIndicators[conversationId]).length === 0) {
           delete state.typingIndicators[conversationId];
         }
       }
     },
-    // Action to load messages for a specific conversation (useful if not preloaded)
-    // This is synchronous now as it reads from localStorage via the service
+    
+    // Action to load messages for a specific conversation
     loadMessagesForConversation: (state, action: PayloadAction<UUID>) => {
       const conversationId = action.payload;
       if (
-        state.conversations[conversationId] &&
-        !state.messages[conversationId]
+        state.conversations[conversationId] && !state.messages[conversationId]
       ) {
         try {
           state.messages[conversationId] =
@@ -174,10 +360,9 @@ const chatSlice = createSlice({
         }
       }
     },
+    
     setIsMobile: (state, action: PayloadAction<boolean>) => {
       state.isMobile = action.payload;
-      // Auto-adjust showChat when screen size changes
-      // On desktop, always show chat if conversation is selected
       if (!action.payload && state.currentConversationId) {
         state.showChat = true;
       }
@@ -189,34 +374,99 @@ const chatSlice = createSlice({
 
     // Action to set the currently viewed conversation
     setCurrentConversation: (state, action: PayloadAction<UUID | null>) => {
-      state.currentConversationId = action.payload;
+      const conversationId = action.payload;
+      state.currentConversationId = conversationId;
+      
       // Reset unread count
-      if (action.payload && state.conversations[action.payload]) {
-        state.conversations[action.payload].unreadCount = 0;
+      if (conversationId && state.conversations[conversationId]) {
+        state.conversations[conversationId].unreadCount = 0;
       }
+      
       // Auto-show chat when a conversation is selected
-      if (action.payload) {
+      if (conversationId) {
         state.showChat = true;
       }
     },
+    
+    // Leave a group chat
+    leaveGroupChat: (
+      state,
+      action: PayloadAction<{
+        conversationId: UUID;
+        currentUser: User | null;
+      }>
+    ) => {
+      const { conversationId, currentUser } = action.payload;
+      
+      if (!currentUser || !state.conversations[conversationId]) {
+        return;
+      }
+      
+      const conversation = state.conversations[conversationId];
+      
+      // Can only leave group chats
+      if (conversation.type !== 'group') {
+        state.status = "failed";
+        state.error = "Can only leave group chats";
+        return;
+      }
+      
+      try {
+        // Use the removeGroupMember service to remove yourself
+        const operation: GroupMemberOperation = {
+          conversationId,
+          userId: currentUser.id
+        };
+        
+        const updatedGroupChat = removeGroupMemberService(operation, currentUser);
+        
+        if (updatedGroupChat) {
+          state.conversations[updatedGroupChat.id] = updatedGroupChat;
+          
+          // If this was the current conversation, clear it
+          if (state.currentConversationId === conversationId) {
+            state.currentConversationId = null;
+            state.showChat = false;
+          }
+          
+          state.status = "succeeded";
+          state.error = null;
+        } else {
+          state.status = "failed";
+          state.error = "Failed to leave group chat";
+        }
+      } catch (error: any) {
+        state.status = "failed";
+        state.error = error.message || "Failed to leave group chat";
+        console.error("Error leaving group chat:", error);
+      }
+    },
+    
     // Standard status/error handling
     setStatus: (state, action: PayloadAction<ChatState["status"]>) => {
       state.status = action.payload;
     },
+    
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
       state.status = "failed";
     },
   },
-  // No extraReducers needed for local storage sync actions
 });
 
 export const {
   submitMessage,
   upsertConversation,
+  createGroupChat,
+  updateGroupChat,
+  addGroupMember,
+  removeGroupMember,
+  updateMemberRole,
+  markConversationAsRead,
   updateTypingIndicator,
   loadMessagesForConversation,
   setCurrentConversation,
+  leaveGroupChat,
   setStatus,
   setError,
   setIsMobile,
@@ -225,32 +475,7 @@ export const {
 
 export default chatSlice.reducer;
 
-// --- Selectors (remain largely the same) ---
-// export const selectChatState = (state: { chat: ChatState }) => state.chat;
-// export const selectAllConversations = (state: { chat: ChatState }) =>
-//   Object.values(state.chat.conversations).sort(
-//     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-//   ); // Keep sorted by recent activity
-// export const selectCurrentConversationId = (state: { chat: ChatState }) =>
-//   state.chat.currentConversationId;
-// export const selectMessagesForCurrentConversation = (state: {
-//   chat: ChatState;
-// }): Message[] => {
-//   const currentId = state.chat.currentConversationId;
-//   if (!currentId || !state.chat.messages[currentId]) return [];
-//   return Object.values(state.chat.messages[currentId]).sort(
-//     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-//   );
-// };
-// export const selectTypingUsersInCurrentConversation = (state: {
-//   chat: ChatState;
-// }): UUID[] => {
-//   const currentId = state.chat.currentConversationId;
-//   if (!currentId || !state.chat.typingIndicators[currentId]) return [];
-//   return Object.entries(state.chat.typingIndicators[currentId])
-//     .filter(([, isTyping]) => isTyping)
-//     .map(([userId]) => userId);
-// };
+// --- Selectors ---
 export const selectChatState = (state: { chat: ChatState }) => state.chat;
 export const selectConversationsMap = (state: { chat: ChatState }) =>
   state.chat.conversations;
@@ -284,8 +509,6 @@ export const selectCurrentConversation = createSelector(
 export const selectMessagesForCurrentConversation = createSelector(
   [selectMessagesMap, selectCurrentConversationId],
   (messages, currentId) => {
-    console.log("messages slice", messages);
-
     if (!currentId || !messages[currentId]) return [];
     return Object.values(messages[currentId]).sort(
       (a, b) =>
@@ -303,3 +526,44 @@ export const selectTypingUsersInCurrentConversation = createSelector(
       .map(([userId]) => userId);
   }
 );
+
+export const selectOneToOneConversations = createSelector(
+  [selectAllConversations],
+  (conversations) => conversations.filter(convo => convo.type === 'one-to-one')
+);
+
+export const selectGroupConversations = createSelector(
+  [selectAllConversations],
+  (conversations) => conversations.filter(convo => convo.type === 'group')
+);
+
+export const selectParticipantsForCurrentConversation = createSelector(
+  [selectCurrentConversation],
+  (conversation) => conversation ? conversation.participants : []
+);
+
+export const selectIsCurrentUserAdmin = createSelector(
+  [selectCurrentConversation, (_state: { chat: ChatState }, currentUserId: UUID | null) => currentUserId],
+  
+  (conversation, currentUserId) => {
+    if (!conversation || !currentUserId) return false;
+    const userParticipant = conversation.participants.find(p => p.id === currentUserId);
+    return userParticipant?.role === 'admin' || userParticipant?.role === 'owner';
+  }
+);
+
+export const selectIsCurrentUserOwner = createSelector(
+  [selectCurrentConversation, (_state: { chat: ChatState }, currentUserId: UUID | null) => currentUserId],
+  (conversation, currentUserId) => {
+    if (!conversation || !currentUserId) return false;
+    const userParticipant = conversation.participants.find(p => p.id === currentUserId);
+    return userParticipant?.role === 'owner';
+  }
+);
+
+export const selectUnreadMessagesCount = createSelector(
+  [selectConversationsMap],
+  (conversations) => 
+    Object.values(conversations).reduce((total, convo) => total + (convo.unreadCount || 0), 0)
+);
+        

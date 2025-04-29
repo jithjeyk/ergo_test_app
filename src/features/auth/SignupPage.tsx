@@ -572,7 +572,7 @@ const SignupPage: React.FC = () => {
                       fullWidth
                       variant="contained"
                       startIcon={<GoogleIcon />}
-                      onClick={() => handleSSOSignup("google")}
+                      onClick={() => (window.location.href = "http://localhost:3000/auth/google")}
                       sx={{ textTransform: "none" }}
                     >
                       Google

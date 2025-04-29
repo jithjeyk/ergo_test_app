@@ -1,3 +1,4 @@
+// ChatAppBar.tsx
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -7,25 +8,30 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  // Divider,
   Avatar,
   styled,
   useMediaQuery,
-  // Theme
 } from "@mui/material";
 import {
   ChatBubbleOutline,
   GroupWorkOutlined,
   ChatOutlined,
-  // BookmarkBorder,
-  // CalendarMonth,
-  // FolderOutlined,
   SettingsOutlined,
 } from "@mui/icons-material";
-import { selectIsMobile } from "../../store/chatSlice";
+import { selectIsMobile } from "../../store/chatSlice"; // Ensure correct path
+
+// Define the possible filter types
+export type ChatFilterType = 'all' | 'personal' | 'group';
+
 interface NavItemProps {
   active?: boolean;
   isTab?: boolean;
+}
+
+// Define props for ChatAppBar, including the callback
+interface ChatAppBarProps {
+  activeFilter: ChatFilterType;
+  onFilterChange: (filter: ChatFilterType) => void;
 }
 
 const SidebarContainer = styled(Box, {
@@ -88,13 +94,6 @@ const ItemText = styled(ListItemText)({
   },
 });
 
-// const StyledDivider = styled(Divider, {
-//   shouldForwardProp: (prop) => prop !== 'isTab'
-// })<{ isTab: boolean }>(({ isTab }) => ({
-//   width: isTab ? '1px' : '80%',
-//   height: isTab ? '40px' : 'auto',
-//   margin: isTab ? '0 8px' : '16px auto'
-// }));
 
 const ListContainer = styled(List, {
   shouldForwardProp: (prop) => prop !== "isTab" && prop !== "isMobile",
@@ -107,29 +106,27 @@ const ListContainer = styled(List, {
   alignItems: "center",
 }));
 
-const ChatAppBar = () => {
-  const [activeItem, setActiveItem] = useState("allChats");
+// Accept props defined in the interface
+const ChatAppBar: React.FC<ChatAppBarProps> = ({ activeFilter, onFilterChange }) => {
+  // Removed local activeItem state, using prop instead
   const isTab = useMediaQuery("(max-width: 992px)");
   const [mounted, setMounted] = useState(false);
   const isMobile = useSelector(selectIsMobile);
 
-  // Handle SSR/hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Render null during SSR to prevent hydration mismatch
   if (!mounted) return null;
 
-  const handleItemClick = (itemId: string) => {
-    setActiveItem(itemId);
+  const handleItemClick = (itemId: ChatFilterType) => {
+    onFilterChange(itemId); // Call the callback prop
   };
 
-  // Avatar placement changes based on mobile/desktop
   const AvatarComponent = () => (
     <Box sx={isTab ? { mx: 1 } : { mb: 4, mt: 1 }}>
       <Avatar
-        src="https://mui.com/static/images/avatar/1.jpg"
+        src="https://mui.com/static/images/avatar/1.jpg" // Replace with dynamic user avatar if available
         alt="User profile"
         sx={{ width: 36, height: 36 }}
       />
@@ -140,22 +137,21 @@ const ChatAppBar = () => {
     <SidebarContainer
       isTab={isTab}
       role="navigation"
-      aria-label="Main Navigation"
+      aria-label="Chat Filters" // Updated aria-label
     >
       {!isTab && <AvatarComponent />}
 
       <ListContainer isTab={isTab} isMobile={isMobile}>
-        {/* {isTab && <AvatarComponent />} */}
-
         <ListItem
           disablePadding
           sx={{ display: "block", width: isTab ? "auto" : "100%" }}
         >
           <NavItem
-            active={activeItem === "allChats"}
+            active={activeFilter === "all"} // Use prop for active state
             isTab={isTab}
-            onClick={() => handleItemClick("allChats")}
+            onClick={() => handleItemClick("all")} // Pass filter type
             aria-label="All chats"
+            aria-current={activeFilter === 'all'} // Improve accessibility
           >
             <IconContainer>
               <ChatBubbleOutline fontSize={isTab ? "small" : "medium"} />
@@ -172,10 +168,11 @@ const ChatAppBar = () => {
           sx={{ display: "block", width: isTab ? "auto" : "100%" }}
         >
           <NavItem
-            active={activeItem === "personal"}
+            active={activeFilter === "personal"} // Use prop for active state
             isTab={isTab}
-            onClick={() => handleItemClick("personal")}
-            aria-label="Personal"
+            onClick={() => handleItemClick("personal")} // Pass filter type
+            aria-label="Personal chats"
+            aria-current={activeFilter === 'personal'} // Improve accessibility
           >
             <IconContainer>
               <ChatOutlined fontSize={isTab ? "small" : "medium"} />
@@ -192,10 +189,11 @@ const ChatAppBar = () => {
           sx={{ display: "block", width: isTab ? "auto" : "100%" }}
         >
           <NavItem
-            active={activeItem === "group"}
+            active={activeFilter === "group"} // Use prop for active state
             isTab={isTab}
-            onClick={() => handleItemClick("group")}
-            aria-label="Group"
+            onClick={() => handleItemClick("group")} // Pass filter type
+            aria-label="Group chats"
+            aria-current={activeFilter === 'group'} // Improve accessibility
           >
             <IconContainer>
               <GroupWorkOutlined fontSize={isTab ? "small" : "medium"} />
@@ -207,15 +205,17 @@ const ChatAppBar = () => {
           </NavItem>
         </ListItem>
 
+         {/* Settings button - logic remains the same but using filter mechanism if needed */}
         {isTab && (
           <ListItem
             disablePadding
             sx={{ display: "block", width: isTab ? "auto" : "100%" }}
           >
+            {/* Assuming 'settings' is not a filter, handle its click separately or adjust logic */}
             <NavItem
-              active={activeItem === "settings"}
+              // active={activeFilter === "settings"} // Decide if settings should be part of the filter state
               isTab={isTab}
-              onClick={() => handleItemClick("settings")}
+              onClick={() => console.log("Settings clicked")} // Example action
               aria-label="Settings"
             >
               <IconContainer>
@@ -228,69 +228,21 @@ const ChatAppBar = () => {
             </NavItem>
           </ListItem>
         )}
-
-        {/* <ListItem disablePadding sx={{ display: 'block', width: isTab ? 'auto' : '100%' }}>
-          <NavItem 
-            active={activeItem === 'saved'} 
-            isTab={isTab}
-            onClick={() => handleItemClick('saved')}
-            aria-label="Saved"
-          >
-            <IconContainer>
-              <BookmarkBorder fontSize={isTab ? 'small' : 'medium'} />
-            </IconContainer>
-            <ItemText primary="Saved" primaryTypographyProps={{ noWrap: true }} />
-          </NavItem>
-        </ListItem> */}
       </ListContainer>
-
-      {/* <StyledDivider isTab={isTab} orientation={isTab ? 'vertical' : 'horizontal'} />
-      
-      <ListContainer isTab={isTab}>
-        <ListItem disablePadding sx={{ display: 'block', width: isTab ? 'auto' : '100%' }}>
-          <NavItem 
-            active={activeItem === 'calendar'} 
-            isTab={isTab}
-            onClick={() => handleItemClick('calendar')}
-            aria-label="Calendar"
-          >
-            <IconContainer>
-              <CalendarMonth fontSize={isTab ? 'small' : 'medium'} />
-            </IconContainer>
-            <ItemText primary="Calendar" primaryTypographyProps={{ noWrap: true }} />
-          </NavItem>
-        </ListItem>
-        
-        <ListItem disablePadding sx={{ display: 'block', width: isTab ? 'auto' : '100%' }}>
-          <NavItem 
-            active={activeItem === 'files'} 
-            isTab={isTab}
-            onClick={() => handleItemClick('files')}
-            aria-label="Files"
-          >
-            <IconContainer>
-              <FolderOutlined fontSize={isTab ? 'small' : 'medium'} />
-            </IconContainer>
-            <ItemText primary="Files" primaryTypographyProps={{ noWrap: true }} />
-          </NavItem>
-        </ListItem>
-      </ListContainer> */}
 
       {!isTab && <Box sx={{ flexGrow: 1 }} />}
 
-      {/* {isTab ? (
-        <StyledDivider isTab={isTab} orientation="vertical" />
-      ) : null} */}
       {!isTab && (
         <ListContainer isTab={isTab}>
           <ListItem
             disablePadding
             sx={{ display: "block", width: isTab ? "auto" : "100%" }}
           >
+             {/* Assuming 'settings' is not a filter, handle its click separately or adjust logic */}
             <NavItem
-              active={activeItem === "settings"}
+              // active={activeFilter === "settings"} // Decide if settings should be part of the filter state
               isTab={isTab}
-              onClick={() => handleItemClick("settings")}
+              onClick={() => console.log("Settings clicked")} // Example action
               aria-label="Settings"
             >
               <IconContainer>

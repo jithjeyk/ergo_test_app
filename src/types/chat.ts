@@ -1,10 +1,11 @@
-// src/types/chat.ts
-import type { UUID, ISO8601Date } from './document'; // Assuming UUID and ISO8601Date are defined here or in a shared types file [cite: src/types/document.ts]
-import type { User } from './types'; // Import existing User type [cite: src/types/types.ts]
+import type { UUID, ISO8601Date } from './document';
+import type { User } from './types';
 
-export interface Participant extends Pick<User, 'id' | 'name' | 'avatar'> { // Reuse existing User type properties [cite: src/types/types.ts]
+export interface Participant extends Pick<User, 'id' | 'name' | 'avatar'> {
+  status?: string;
   lastSeen?: ISO8601Date;
   isOnline?: boolean;
+  role?: 'owner' | 'admin' | 'member'; // Added for group chat permissions
 }
 
 export interface ChatParticipant {
@@ -13,35 +14,67 @@ export interface ChatParticipant {
   avatar?: string;
   isOnline?: boolean;
   lastSeen?: string;
+  role?: 'owner' | 'admin' | 'member'; // Added for group chat permissions
 }
 
 export interface Message {
   id: UUID;
   conversationId: UUID;
-  senderId: UUID; // ID of the User who sent the message
-  recipientId: UUID;
+  senderId: UUID;
+  recipientId?: UUID; // Made optional since group messages don't have a single recipient
   content: string;
   timestamp: ISO8601Date;
   status: 'sending' | 'sent' | 'delivered' | 'read' | 'failed';
   isRead: boolean;
-  contentType?: 'text' | 'image' | 'file'; // Extensible for different message types
-  metadata?: Record<string, unknown>; // For things like file URLs, image dimensions etc.
+  contentType?: 'text' | 'image' | 'file';
+  metadata?: Record<string, unknown>;
+  // Added for group chat features
+  mentionedUserIds?: UUID[]; // To track @mentions
+  readBy?: Record<UUID, ISO8601Date>; // Track who has read the message and when
 }
 
 export interface Conversation {
   id: UUID;
-  participants: Participant[]; // Array of participants in the chat
-  lastMessage: Message | null; // The latest message for preview
+  participants: Participant[];
+  lastMessage: Message | null;
   unreadCount: number;
   createdAt: ISO8601Date;
-  updatedAt: ISO8601Date; // Timestamp of the last activity/message
-  type: 'one-to-one'; // Can be extended for group chats later
-  createdBy: UUID; // User who initiated the conversation
+  updatedAt: ISO8601Date;
+  type: 'one-to-one' | 'group'; // Extended to support group chats
+  createdBy: UUID;
   customMetadata?: Record<string, unknown>;
+  // Added for group chat features
+  name?: string; // Group name for group chats
+  description?: string; // Optional group description
+  avatar?: string; // Group avatar URL
+  isPublic?: boolean; // Whether the group is publicly discoverable
 }
 
 export interface TypingIndicator {
-    conversationId: UUID;
-    userId: UUID;
-    isTyping: boolean;
+  conversationId: UUID;
+  userId: UUID;
+  isTyping: boolean;
+}
+
+// Helper interfaces for group chat operations
+export interface GroupChatCreationParams {
+  name: string;
+  description?: string;
+  avatar?: string;
+  isPublic?: boolean;
+  participantIds: UUID[];
+}
+
+export interface GroupChatUpdateParams {
+  id: UUID;
+  name?: string;
+  description?: string;
+  avatar?: string;
+  isPublic?: boolean;
+}
+
+export interface GroupMemberOperation {
+  conversationId: UUID;
+  userId: UUID;
+  role?: 'owner' | 'admin' | 'member';
 }
