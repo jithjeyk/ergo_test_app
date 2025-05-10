@@ -1,18 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-type DateFormatOptions = {
-  weekday?: "long" | "short" | "narrow";
-  year?: "numeric" | "2-digit";
-  month?: "numeric" | "2-digit" | "long" | "short" | "narrow";
-  day?: "numeric" | "2-digit";
-  hour?: "numeric" | "2-digit";
-  minute?: "numeric" | "2-digit";
-  second?: "numeric" | "2-digit";
-  timeZoneName?: "short" | "long";
-};
-
+// More accurate type definition using the built-in Intl.DateTimeFormatOptions
 type UseCurrentDateOptions = {
-  format?: DateFormatOptions;
+  format?: Intl.DateTimeFormatOptions;
   locale?: string;
   updateInterval?: number; // in milliseconds
   liveUpdate?: boolean;
@@ -36,42 +26,41 @@ export const useCurrentDate = (options?: UseCurrentDateOptions) => {
   const [currentDate, setCurrentDate] = useState<string>("");
   const [rawDate, setRawDate] = useState<Date>(new Date());
 
+  // Merge options only once if they don't change
   const mergedOptions = { ...defaultOptions, ...options };
 
-  useEffect(() => {
-    const formatDate = () => {
-      const formatted = rawDate.toLocaleDateString(
-        mergedOptions.locale,
-        mergedOptions.format as Intl.DateTimeFormatOptions
-      );
-      setCurrentDate(formatted);
-    };
+  // Memoize the format function to avoid unnecessary re-renders
+  const formatDate = useCallback(() => {
+    const formatted = new Intl.DateTimeFormat(
+      mergedOptions.locale,
+      mergedOptions.format
+    ).format(rawDate);
 
+    setCurrentDate(formatted);
+  }, [rawDate, mergedOptions.locale, JSON.stringify(mergedOptions.format)]);
+
+  // Update the date and format it
+  useEffect(() => {
     formatDate();
 
-    let intervalId: NodeJS.Timeout | null = null;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
 
     if (mergedOptions.liveUpdate) {
       intervalId = setInterval(() => {
-        const newDate = new Date();
-        setRawDate(newDate);
-        formatDate();
+        setRawDate(new Date());
       }, mergedOptions.updateInterval);
     }
 
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [rawDate, mergedOptions]);
+  }, [formatDate, mergedOptions.liveUpdate, mergedOptions.updateInterval]);
 
   // Return both formatted string and Date object for flexibility
   return {
     formattedDate: currentDate,
     dateObject: rawDate,
-    refresh: () => {
-      const newDate = new Date();
-      setRawDate(newDate);
-    },
+    refresh: () => setRawDate(new Date()),
   };
 };
 

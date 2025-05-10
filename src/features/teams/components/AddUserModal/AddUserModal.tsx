@@ -29,7 +29,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
   const [activeMethod, setActiveMethod] = useState<AddUserMethod>('single');
   const [formData, setFormData] = useState<any>({});
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: AddUserMethod) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: AddUserMethod) => {
     setActiveMethod(newValue);
   };
 
