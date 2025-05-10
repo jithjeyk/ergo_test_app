@@ -18,7 +18,7 @@ import {
   ChatOutlined,
   SettingsOutlined,
 } from "@mui/icons-material";
-import { selectIsMobile } from "../../store/chatSlice"; // Ensure correct path
+import { selectIsMobile } from "../../../store/chatSlice"; // Ensure correct path
 
 // Define the possible filter types
 export type ChatFilterType = 'all' | 'personal' | 'group';

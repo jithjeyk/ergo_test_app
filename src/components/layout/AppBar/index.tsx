@@ -38,7 +38,7 @@ const StyledAppBar = styled(AppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  backgroundColor: theme.palette.background.darker,
+  backgroundColor: theme.palette.background.paper, 
   color: theme.palette.primary.main,
   ...(open && {
     marginLeft: drawerWidth,

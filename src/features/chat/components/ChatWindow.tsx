@@ -9,8 +9,8 @@ import {
   updateTypingIndicator,
   selectCurrentConversation,
   selectParticipantsForCurrentConversation,
-} from "../../store/chatSlice";
-import { User } from "../../types/types";
+} from "../../../store/chatSlice";
+import { User } from "../../../types/types";
 // import { Participant } from "../../types/chat";
 import ChatMessageList from "./ChatMessageList";
 import ChatInput from "./ChatInput";

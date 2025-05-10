@@ -9,10 +9,10 @@ import {
   setIsMobile,
   setShowChat,
 } from "../../store/chatSlice";
-import ChatSidebar from "./ChatSidebar";
-import ChatWindow from "./ChatWindow";
-import EmptyChatState from "./EmptyChatState";
-import ChatDataInitializer from "./ChatDataInitializer";
+import ChatSidebar from "./components/ChatSidebar";
+import ChatWindow from "./components/ChatWindow";
+import EmptyChatState from "./components/EmptyChatState";
+import ChatDataInitializer from "./components/ChatDataInitializer";
 import { AuthContext } from "../../context/AuthContext";
 import {
   Box,

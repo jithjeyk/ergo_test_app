@@ -5,11 +5,11 @@ import {
   setCurrentConversation,
   selectIsMobile,
   createGroupChat, // Import the createGroupChat action
-} from "../../store/chatSlice"; // Ensure correct path
-import { Conversation, GroupChatCreationParams } from "../../types/chat"; // Ensure correct path, import GroupChatCreationParams
-import { User } from "../../types/types"; // Ensure correct path
-import Avatar from "../../components/common/Avatar"; // Ensure correct path
-import { formatTimeAgo } from "../../utils/dateUtils"; // Ensure correct path
+} from "../../../store/chatSlice"; // Ensure correct path
+import { Conversation, GroupChatCreationParams } from "../../../types/chat"; // Ensure correct path, import GroupChatCreationParams
+import { User } from "../../../types/types"; // Ensure correct path
+import Avatar from "../../../components/common/Avatar"; // Ensure correct path
+import { formatTimeAgo } from "../../../utils/dateUtils"; // Ensure correct path
 import ChatAppBar, { ChatFilterType } from "./ChatAppBar"; // Import ChatFilterType and ChatAppBar
 import CreateGroupDialog from "./CreateGroupDialog"; // Ensure correct path
 import {

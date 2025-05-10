@@ -78,3 +78,25 @@ export interface GroupMemberOperation {
   userId: UUID;
   role?: 'owner' | 'admin' | 'member';
 }
+
+export interface FileAttachment {
+  name: string;
+  size: string;
+  type: string;
+}
+
+export interface Reference {
+  id: string;
+  name: string;
+  type: string;
+}
+
+export type AiConversationType = {
+  id: string;
+  type: 'ai' | 'user';
+  content: string;
+  timestamp: Date;
+  references?: Reference[];
+  files?: FileAttachment[];
+  quickReplies?: string[];
+};

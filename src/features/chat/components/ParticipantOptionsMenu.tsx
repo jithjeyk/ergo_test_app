@@ -5,10 +5,10 @@ import { Menu, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import { Participant, GroupMemberOperation } from "../../types/chat";
-import { User } from "../../types/types";
-import { UUID } from "../../types/document";
-import { updateMemberRole, removeGroupMember } from "../../store/chatSlice";
+import { Participant, GroupMemberOperation } from "../../../types/chat";
+import { User } from "../../../types/types";
+import { UUID } from "../../../types/document";
+import { updateMemberRole, removeGroupMember } from "../../../store/chatSlice";
 
 interface ParticipantOptionsMenuProps {
   anchorEl: null | HTMLElement;

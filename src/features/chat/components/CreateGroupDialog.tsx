@@ -1,5 +1,5 @@
 // src/components/chat/CreateGroupDialog.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -20,15 +20,17 @@ import {
   Stepper,
   Step,
   StepLabel,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { Conversation } from "../../types/chat"; // Adjust import paths as needed
-import { User } from "../../types/types"; // Adjust import paths as needed
-import Avatar from "../../components/common/Avatar"; // Adjust import path as needed
+import { Conversation } from "../../../types/chat"; // Adjust import paths as needed
+import { User } from "../../../types/types"; // Adjust import paths as needed
+import Avatar from "../../../components/common/Avatar"; // Adjust import path as needed
 
 interface CreateGroupDialogProps {
   open: boolean;
@@ -49,12 +51,24 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
   currentUser,
   onCreateGroup,
 }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
   const [groupCreationStep, setGroupCreationStep] = useState(0);
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
   const [groupName, setGroupName] = useState("");
   const [groupAvatar, setGroupAvatar] = useState<File | null>(null);
   const [groupAvatarPreview, setGroupAvatarPreview] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Reset scroll position when changing steps
+  useEffect(() => {
+    const dialogContent = document.querySelector(".MuiDialogContent-root");
+    if (dialogContent) {
+      dialogContent.scrollTop = 0;
+    }
+  }, [groupCreationStep]);
 
   const resetForm = () => {
     setGroupCreationStep(0);
@@ -144,10 +158,43 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
       return displayInfo.name.toLowerCase().includes(searchTerm);
     });
 
+  // Determine avatar size based on screen size
+  const getAvatarSize = () => {
+    if (isMobile) return "sm";
+    return "md";
+  };
+
+  // Determine group avatar upload size based on screen size
+  const getGroupAvatarSize = () => {
+    if (isMobile) return 80;
+    return 100;
+  };
+
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      fullWidth
+      fullScreen={isMobile}
+      maxWidth={isTablet ? "sm" : "md"}
+      PaperProps={{
+        sx: {
+          height: isMobile ? "100%" : "auto",
+          maxHeight: isMobile ? "100%" : "90vh",
+          borderRadius: isMobile ? 0 : 2,
+        },
+      }}
+    >
       <Box sx={{ position: "relative" }}>
-        <DialogTitle>
+        <DialogTitle
+          sx={{
+            p: isMobile ? 2 : 3,
+            position: "sticky",
+            top: 0,
+            backgroundColor: "background.paper",
+            zIndex: 1,
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {groupCreationStep > 0 && (
               <IconButton
@@ -155,20 +202,26 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
                 color="inherit"
                 onClick={handlePreviousStep}
                 sx={{ mr: 1 }}
+                aria-label="back"
+                size={isMobile ? "medium" : "large"}
               >
                 <ArrowBackIcon />
               </IconButton>
             )}
-            {groupCreationStep === 0 && "Add group participants"}
-            {groupCreationStep === 1 && "Group info"}
+            <Typography
+              variant={isMobile ? "subtitle1" : "h6"}
+              component="div"
+              sx={{ flexGrow: 1 }}
+            >
+              {groupCreationStep === 0 && "Add group participants"}
+              {groupCreationStep === 1 && "Group info"}
+            </Typography>
 
             <IconButton
               aria-label="close"
               onClick={handleClose}
+              size={isMobile ? "medium" : "large"}
               sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
                 color: (theme) => theme.palette.grey[500],
               }}
             >
@@ -177,8 +230,23 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
           </Box>
         </DialogTitle>
 
-        <DialogContent dividers>
-          <Stepper activeStep={groupCreationStep} sx={{ mb: 3 }}>
+        <DialogContent
+          dividers
+          sx={{
+            p: isMobile ? 2 : 3,
+            pb: isMobile ? 8 : 3, // Add padding at bottom for mobile to ensure content isn't hidden behind fixed buttons
+            height: isMobile ? "calc(100% - 120px)" : "auto",
+            maxHeight: isMobile ? "none" : 500,
+            overflow: "auto",
+          }}
+        >
+          <Stepper
+            activeStep={groupCreationStep}
+            sx={{
+              mb: 3,
+              display: { xs: "none", sm: "flex" }, // Hide stepper on mobile
+            }}
+          >
             <Step>
               <StepLabel>Select Participants</StepLabel>
             </Step>
@@ -192,7 +260,7 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
               <TextField
                 fullWidth
                 placeholder="Search contacts"
-                size="small"
+                size={isMobile ? "small" : "medium"}
                 value={searchTerm}
                 onChange={handleSearchChange}
                 InputProps={{
@@ -202,7 +270,15 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
                     </InputAdornment>
                   ),
                 }}
-                sx={{ mb: 2, bgcolor: "action.hover", borderRadius: 2 }}
+                sx={{
+                  mb: 2,
+                  bgcolor: "action.hover",
+                  borderRadius: 2,
+                  "& .MuiInputBase-root": {
+                    borderRadius: 2,
+                    height: isMobile ? 40 : 48,
+                  },
+                }}
               />
 
               <Box sx={{ mb: 2 }}>
@@ -212,7 +288,15 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
                 </Typography>
               </Box>
 
-              <List sx={{ maxHeight: 300, overflow: "auto" }}>
+              <List
+                sx={{
+                  maxHeight: isMobile ? "calc(100vh - 240px)" : 300,
+                  overflow: "auto",
+                  "& .MuiListItemButton-root": {
+                    py: isMobile ? 1 : 1.5, // Increase touch target size on mobile
+                  },
+                }}
+              >
                 {filteredContacts.map((conversation) => {
                   const displayInfo = getConversationDisplay(conversation);
                   const isSelected = selectedContacts.includes(conversation.id);
@@ -232,21 +316,28 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
                         <Avatar
                           src={displayInfo.avatar || ""}
                           alt={displayInfo.name}
-                          size="md"
+                          size={getAvatarSize()}
                         />
                       </ListItemAvatar>
                       <ListItemText
                         primary={displayInfo.name}
-                        primaryTypographyProps={{ component: "div" }} // Prevent <p>
+                        primaryTypographyProps={{
+                          component: "div",
+                          noWrap: true, // Prevent text overflow
+                          sx: {
+                            fontSize: isMobile ? "0.9rem" : "1rem",
+                            fontWeight: isSelected ? "medium" : "regular",
+                          },
+                        }}
                       />
                       <Checkbox
                         checked={isSelected}
                         icon={
                           <Box
-                            component="span" // Use span instead of div
+                            component="span"
                             sx={{
-                              width: 24,
-                              height: 24,
+                              width: isMobile ? 20 : 24,
+                              height: isMobile ? 20 : 24,
                               borderRadius: "50%",
                               border: "2px solid",
                               borderColor: "action.disabled",
@@ -262,6 +353,13 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
                     </ListItemButton>
                   );
                 })}
+                {filteredContacts.length === 0 && (
+                  <Box sx={{ p: 3, textAlign: "center" }}>
+                    <Typography color="text.secondary">
+                      No contacts found
+                    </Typography>
+                  </Box>
+                )}
               </List>
             </>
           )}
@@ -272,13 +370,14 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                p: 2,
+                p: isMobile ? 1 : 2,
+                width: "100%",
               }}
             >
               <Box
                 sx={{
-                  width: 100,
-                  height: 100,
+                  width: getGroupAvatarSize(),
+                  height: getGroupAvatarSize(),
                   borderRadius: "50%",
                   bgcolor: "action.hover",
                   display: "flex",
@@ -294,6 +393,7 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
                     component="img"
                     src={groupAvatarPreview}
                     sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    alt="Group avatar preview"
                   />
                 ) : (
                   <svg width="40" height="40" viewBox="0 0 24 24">
@@ -317,6 +417,7 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
                     opacity: 0,
                     cursor: "pointer",
                   }}
+                  aria-label="Upload group avatar"
                 />
               </Box>
 
@@ -326,14 +427,27 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
                 placeholder="Enter group name"
                 value={groupName}
                 onChange={handleGroupNameChange}
-                sx={{ mb: 2 }}
+                sx={{ mb: 3 }}
+                inputProps={{
+                  maxLength: 50, // Prevent extremely long names
+                  "aria-label": "Group name",
+                }}
               />
 
               <Box sx={{ mt: 2, width: "100%" }}>
                 <Typography variant="body2" color="text.secondary">
                   {selectedContacts.length} participants
                 </Typography>
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 1,
+                    mt: 1,
+                    maxHeight: isMobile ? 160 : 200,
+                    overflow: "auto",
+                  }}
+                >
                   {selectedContacts.map((contactId) => {
                     const conversation = conversations.find(
                       (c) => c.id === contactId
@@ -348,11 +462,20 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
                           <Avatar
                             src={displayInfo.avatar || ""}
                             alt={displayInfo.name}
+                            size="sm"
                           />
                         }
                         label={displayInfo.name}
                         onDelete={() => handleContactSelect(contactId)}
-                        size="medium"
+                        size={isMobile ? "small" : "medium"}
+                        sx={{
+                          maxWidth: { xs: "100%", sm: 200 },
+                          "& .MuiChip-label": {
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          },
+                        }}
                       />
                     );
                   })}
@@ -362,28 +485,76 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
           )}
         </DialogContent>
 
-        <DialogActions>
+        <DialogActions
+          sx={{
+            p: isMobile ? 2 : 3,
+            position: isMobile ? "fixed" : "static",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            bgcolor: "background.paper",
+            borderTop: isMobile ? 1 : 0,
+            borderColor: "divider",
+            zIndex: 2,
+            justifyContent: "flex-end",
+          }}
+        >
           {groupCreationStep === 0 && (
-            <Button
-              onClick={handleNextStep}
-              variant="contained"
-              color="primary"
-              disabled={selectedContacts.length === 0}
-              endIcon={<ArrowForwardIcon />}
-            >
-              Next
-            </Button>
+            <>
+              <Button
+                onClick={handleClose}
+                sx={{
+                  display: { xs: "inline-flex", sm: "none" },
+                  mr: "auto",
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleNextStep}
+                variant="contained"
+                color="primary"
+                disabled={selectedContacts.length === 0}
+                endIcon={!isMobile && <ArrowForwardIcon />}
+                fullWidth={isMobile}
+                size={isMobile ? "large" : "medium"}
+                sx={{
+                  py: isMobile ? 1.5 : 1,
+                  display: {
+                    xs: selectedContacts.length ? "inline-flex" : "none",
+                    sm: "inline-flex",
+                  },
+                }}
+              >
+                Next{" "}
+                {selectedContacts.length > 0 && `(${selectedContacts.length})`}
+              </Button>
+            </>
           )}
 
           {groupCreationStep === 1 && (
-            <Button
-              onClick={handleCreateGroup}
-              variant="contained"
-              color="primary"
-              disabled={!groupName.trim()}
-            >
-              Create Group
-            </Button>
+            <>
+              <Button
+                onClick={handlePreviousStep}
+                sx={{
+                  display: { xs: "inline-flex", sm: "none" },
+                  mr: "auto",
+                }}
+              >
+                Back
+              </Button>
+              <Button
+                onClick={handleCreateGroup}
+                variant="contained"
+                color="primary"
+                disabled={!groupName.trim()}
+                fullWidth={isMobile}
+                size={isMobile ? "large" : "medium"}
+                sx={{ py: isMobile ? 1.5 : 1 }}
+              >
+                Create Group
+              </Button>
+            </>
           )}
         </DialogActions>
       </Box>

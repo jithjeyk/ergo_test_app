@@ -57,6 +57,8 @@ const StyledDrawer = styled(MuiDrawer, {
       ...openedMixin(theme),
       display: "flex",
       flexDirection: "column",
+      backgroundColor: theme.palette.background.paper,
+      borderRight: `1px solid ${theme.palette.divider}`,
     },
   }),
   ...(!open && {
@@ -65,6 +67,8 @@ const StyledDrawer = styled(MuiDrawer, {
       ...closedMixin(theme),
       display: "flex",
       flexDirection: "column",
+      backgroundColor: theme.palette.background.paper,
+      borderRight: `1px solid ${theme.palette.divider}`,
     },
   }),
 }));

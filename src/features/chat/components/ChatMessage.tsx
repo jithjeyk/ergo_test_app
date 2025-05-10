@@ -1,7 +1,7 @@
 // src/components/chat/ChatMessage.tsx
 import React from "react";
-import { Message, Participant } from "../../types/chat"; // Import Participant
-import { formatTime } from "../../utils/dateUtils"; // Ensure correct path
+import { Message, Participant } from "../../../types/chat"; // Import Participant
+import { formatTime } from "../../../utils/dateUtils"; // Ensure correct path
 import { Box, Typography, Stack, Tooltip } from "@mui/material"; // Added Tooltip
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import DoneIcon from "@mui/icons-material/Done";

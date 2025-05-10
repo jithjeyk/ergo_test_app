@@ -58,7 +58,7 @@ const getMenuItems = (): MenuItem[] => [
     path: "/myassistant",
     icon: coloredIcon(TipsAndUpdatesOutlinedIcon, ICON_COLORS.analytics),
     iconColor: ICON_COLORS.analytics,
-    disabled: true,
+    // disabled: true,
   },
   {
     id: "my_knowledge_base",
@@ -69,13 +69,13 @@ const getMenuItems = (): MenuItem[] => [
     iconColor: ICON_COLORS.content,
   },
   {
-    id: "team",
+    id: "teams",
     titleKey: "navigation.myTeam",
-    title: "My Team", // Fallback title
-    path: "/team",
+    title: "My Teams", // Fallback title
+    path: "/teams",
     icon: coloredIcon(GroupsOutlinedIcon, ICON_COLORS.collaboration),
     iconColor: ICON_COLORS.collaboration,
-    disabled: true,
+    // disabled: true,
   },
   {
     id: "reports",

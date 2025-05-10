@@ -38,7 +38,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import CheckIcon from "@mui/icons-material/Check"; // For save button
-import Avatar from "../../components/common/Avatar"; // Adjust import path
+import Avatar from "../../../components/common/Avatar"; // Adjust import path
 import ParticipantOptionsMenu from "./ParticipantOptionsMenu"; // Import the new component
 // Assuming AddMemberDialog exists or will be created
 // import AddMemberDialog from './AddMemberDialog';
@@ -46,14 +46,14 @@ import {
   Conversation,
   Participant,
   GroupChatUpdateParams,
-} from "../../types/chat"; // Adjust path as needed
-import { User } from "../../types/types"; // Adjust path as needed
+} from "../../../types/chat"; // Adjust path as needed
+import { User } from "../../../types/types"; // Adjust path as needed
 // import { UUID } from "../../types/document"; // Import UUID
 import {
   leaveGroupChat,
   updateGroupChat,
   addGroupMember,
-} from "../../store/chatSlice"; // Import actions
+} from "../../../store/chatSlice"; // Import actions
 // import { selectIsCurrentUserAdmin, selectIsCurrentUserOwner } from '../../store/chatSlice'; // Optional: use selectors
 
 interface GroupInfoDialogProps {

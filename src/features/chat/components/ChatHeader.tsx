@@ -6,10 +6,10 @@ import {
   selectShowChat,
   setShowChat,
   setCurrentConversation,
-} from "../../store/chatSlice"; // Ensure correct path
-import { Conversation } from "../../types/chat"; // Ensure correct path
-import { User } from "../../types/types"; // Ensure correct path
-import Avatar from "../../components/common/Avatar"; // Ensure correct path
+} from "../../../store/chatSlice"; // Ensure correct path
+import { Conversation } from "../../../types/chat"; // Ensure correct path
+import { User } from "../../../types/types"; // Ensure correct path
+import Avatar from "../../../components/common/Avatar"; // Ensure correct path
 import ChatHeaderMenu from "./ChatHeaderMenu"; // Ensure correct path
 import {
   Box,
@@ -22,7 +22,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import GroupIcon from "@mui/icons-material/Group"; // For group avatar fallback
-import { formatTimeAgo } from "../../utils/dateUtils"; // Ensure correct path
+import { formatTimeAgo } from "../../../utils/dateUtils"; // Ensure correct path
 import MuiAvatar from "@mui/material/Avatar"; // Import MuiAvatar for placeholder GroupAvatar
 
 interface ChatHeaderProps {

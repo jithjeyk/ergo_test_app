@@ -6,6 +6,8 @@ const MyKnowledgeBase = lazy(
   () => import("../features/fileManager/MyDocumentsPage")
 );
 const ChatPage = lazy(() => import("../features/chat/ChatLayout"));
+const TeamsPage = lazy(() => import("../features/teams/TeamMembersPage"));
+const MyAssistant = lazy(() => import("../features/assistant/MyAssistant"));
 // const UserManagement = lazy(() => import('../features/users/UserManagementPage'));
 // Add other page components
 
@@ -48,6 +50,32 @@ const routes: Route[] = [
   {
     path: "/chats",
     component: ChatPage,
+    exact: true,
+    requiresAuth: true,
+    permissions: [
+      UserPermission.ADMIN_ACCESS,
+      UserPermission.READ,
+      UserPermission.WRITE,
+      UserPermission.DELETE,
+      UserPermission.UPDATE,
+    ],
+  },
+  {
+    path: "/teams",
+    component: TeamsPage,
+    exact: true,
+    requiresAuth: true,
+    permissions: [
+      UserPermission.ADMIN_ACCESS,
+      UserPermission.READ,
+      UserPermission.WRITE,
+      UserPermission.DELETE,
+      UserPermission.UPDATE,
+    ],
+  },
+  {
+    path: "/myassistant",
+    component: MyAssistant,
     exact: true,
     requiresAuth: true,
     permissions: [

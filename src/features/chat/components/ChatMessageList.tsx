@@ -1,6 +1,6 @@
 // src/components/chat/ChatMessageList.tsx
 import React from 'react';
-import { Message, Participant } from '../../types/chat'; // Import Participant
+import { Message, Participant } from '../../../types/chat'; // Import Participant
 import ChatMessage from './ChatMessage';
 import { Box, Typography, Chip, Stack } from '@mui/material';
 

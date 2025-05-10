@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import { upsertConversation } from '../../store/chatSlice'; // Removed useSelector and selectAllConversations as they aren't strictly needed here now
-import { getLocalConversations, saveLocalMessagesForConversation } from '../../services/chatService';
-import type { Conversation, Message, Participant } from '../../types/chat';
-import type { User } from '../../types/types';
+import { upsertConversation } from '../../../store/chatSlice'; // Removed useSelector and selectAllConversations as they aren't strictly needed here now
+import { getLocalConversations, saveLocalMessagesForConversation } from '../../../services/chatService';
+import type { Conversation, Message, Participant } from '../../../types/chat';
+import type { User } from '../../../types/types';
 
 // Sample avatar URLs
 const AVATAR_URLS = [

@@ -16,9 +16,9 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import { leaveGroupChat } from "../../store/chatSlice"; // Import leaveGroupChat action
-import { User } from "../../types/types"; // Import User type
-import { UUID } from "../../types/document"; // Import UUID type
+import { leaveGroupChat } from "../../../store/chatSlice"; // Import leaveGroupChat action
+import { User } from "../../../types/types"; // Import User type
+import { UUID } from "../../../types/document"; // Import UUID type
 
 interface ChatHeaderMenuProps {
   anchorEl: null | HTMLElement;
