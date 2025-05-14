@@ -53,8 +53,8 @@ const backdropVariants = {
 };
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("john@example.com");
+  const [password, setPassword] = useState<string>("password123");
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
