@@ -89,16 +89,16 @@ export const ActionsDropdown: React.FC<ActionsDropdownProps> = ({
           '&:hover': {
             backgroundColor: 'error.light',
             '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-              color: 'error.main',
+              color: 'error.contrastText',
             },
           },
         },
       }}>
         <MenuItem onClick={() => handleAction(onDelete)}>
           <ListItemIcon>
-            <DeleteIcon fontSize="small" color="error" />
+            <DeleteIcon fontSize="small"/>
           </ListItemIcon>
-          <ListItemText primaryTypographyProps={{ color: 'error' }}>
+          <ListItemText>
             Delete
           </ListItemText>
         </MenuItem>

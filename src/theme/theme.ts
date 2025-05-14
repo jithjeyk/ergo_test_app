@@ -314,16 +314,22 @@ const getDesignTokens = (mode: ThemeMode): ThemeOptions => ({
           padding: "12px 16px",
         },
         head: {
-          fontWeight: 500,
+          fontWeight: 700,
+          fontSize: "0.775rem",
           color:
             mode === "dark"
               ? colors.dark.text.secondary
               : colors.light.text.secondary,
           backgroundColor:
             mode === "dark"
-              ? colors.dark.background.paper
-              : colors.light.background.paper,
+              ? colors.dark.background.darker
+              : colors.light.background.darker,
         },
+        body: {
+          maxWidth: "200px",
+          // minWidth: "100px",
+          wordBreak: "break-word",
+        }
       },
     },
     MuiListItem: {

@@ -27,7 +27,8 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
         flexDirection: { xs: 'column', sm: 'row' },
         justifyContent: 'space-between',
         alignItems: 'center',
-        mt: 3,
+        // mt: 3,.
+        p: 2,
         gap: 2
       }}
     >

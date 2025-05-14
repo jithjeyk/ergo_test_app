@@ -1,38 +1,38 @@
 import React from 'react';
 import { Chip } from '@mui/material';
-import { SxProps, Theme } from '@mui/material/styles';
+import { SxProps, Theme, alpha } from '@mui/material/styles';
 
 const badgeStyles: Record<string, SxProps<Theme>> = {
   // User Type styles
   admin: {
-    bgcolor: 'primary.light',
-    color: 'primary.dark',
+    bgcolor: (theme) => alpha(theme.palette.primary.light, 0.7),
+    color: 'text.primary',
   },
   user: {
-    bgcolor: 'grey.100',
-    color: 'grey.800',
+    bgcolor: (theme) => alpha(theme.palette.secondary.light, 0.7),
+    color: 'text.primary',
   },
   // Role styles
   manager: {
-    bgcolor: 'info.light',
-    color: 'info.dark',
+    bgcolor: (theme) => alpha(theme.palette.info.light, 0.7),
+    color: 'text.primary',
   },
   hr: {
-    bgcolor: 'warning.light',
-    color: 'warning.dark',
+    bgcolor: (theme) => alpha(theme.palette.warning.light, 0.7),
+    color: 'text.primary',
   },
   // Status styles
   pending: {
-    bgcolor: 'warning.light',
-    color: 'warning.dark',
+    bgcolor: (theme) => alpha(theme.palette.warning.light, 0.7),
+    color: 'text.primary',
   },
   registered: {
-    bgcolor: 'success.light',
-    color: 'success.dark',
+    bgcolor: (theme) => alpha(theme.palette.success.light, 0.7),
+    color: 'text.primary',
   },
   rejected: {
-    bgcolor: 'error.light',
-    color: 'error.dark',
+    bgcolor: (theme) => alpha(theme.palette.error.light, 0.7),
+    color: 'text.primary',
   },
 };
 
@@ -55,8 +55,10 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ type, value }) => {
       size="small"
       sx={{
         ...badgeStyles[value],
-        fontSize: '0.75rem',
+        fontSize: '0.85rem',
         height: 24,
+        borderRadius: 12,
+        minWidth: 60,
       }}
     />
   );

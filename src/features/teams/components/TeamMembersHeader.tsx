@@ -13,16 +13,14 @@ export const TeamMembersHeader: React.FC<TeamMembersHeaderProps> = ({ onAddMembe
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        p: 3,
-        borderBottom: '1px solid',
-        borderColor: 'divider'
+        pb: 3
       }}
     >
       <Box>
-        <Typography variant="h6" fontWeight="bold">
+        <Typography variant="h4">
           Team Members
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="subtitle2" gutterBottom>
           Manage all your team members in one place
         </Typography>
       </Box>
