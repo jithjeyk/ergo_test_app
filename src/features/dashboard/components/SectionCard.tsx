@@ -14,7 +14,7 @@ export const SectionCard = ({
   sx = {},
 }: SectionCardProps) => {
   return (
-    <Card sx={{ p: 4, ...sx }}>
+    <Card sx={{ p: { xs: 1, sm: 2,md: 4 }, ...sx }}>
       <Box display="flex" alignItems="center" mb={3}>
         {icon && (
           <Box color="primary.main" mr={1}>

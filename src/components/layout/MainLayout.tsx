@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   CssBaseline,
@@ -7,7 +7,7 @@ import {
   Theme,
   useMediaQuery,
 } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 import AppBarComponent from "./AppBar/index";
 // import Footer from "./Footer/index";
@@ -15,9 +15,8 @@ import Sidebar from "./Sidebar/index";
 
 const MainContent = styled(Box)<{ theme?: Theme }>(({ theme }) => ({
   flexGrow: 1,
-  // padding: theme.spacing(0.5),
   backgroundColor: theme.palette.background.default,
-  minHeight: "calc(100vh - 64px)", // Adjust based on AppBar height
+  minHeight: "calc(100vh - 64px)",
   display: "flex",
   flexDirection: "column",
 }));
@@ -31,37 +30,35 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down("md")
   );
-  // const [open, setOpen] = React.useState(false);
 
-  // const handleDrawerOpen = () => {
-  //   setOpen(true);
-  // };
+  const location = useLocation();
 
-  // const handleDrawerClose = () => {
-  //   setOpen(false);
-  // };
+  // Detect screen size changes
+  useEffect(() => {
+    setIsSidebarOpen(!isMobile);
+  }, [isMobile]);
+
+  // Close drawer on mobile route change
+  useEffect(() => {
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  }, [location.pathname, isMobile]);
 
   const toggleSidebar = () => {
-      setIsSidebarOpen(!isSidebarOpen);
+    setIsSidebarOpen((prev) => !prev);
   };
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
 
-      <AppBarComponent open={isMobile ? false : isSidebarOpen} onDrawerOpen={toggleSidebar} />
+      <AppBarComponent open={isSidebarOpen} onDrawerOpen={toggleSidebar} />
+      <Sidebar open={isSidebarOpen} onDrawerClose={toggleSidebar} />
 
-      <Sidebar open={isMobile ? false : isSidebarOpen} onDrawerClose={toggleSidebar} />
       <MainContent>
-        <Toolbar /> {/* Create space below AppBar */}
+        <Toolbar />
         {children || <Outlet />}
-        {/* <Box
-          sx={(theme) => ({
-            borderTop: `1px solid ${theme.palette.divider}`,
-          })}
-        >
-          <Footer />
-        </Box> */}
       </MainContent>
     </Box>
   );

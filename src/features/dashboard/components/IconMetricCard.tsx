@@ -20,16 +20,16 @@ export const IconMetricCard = ({
   return (
     <Card
       sx={{
-        p: 3,
+        px: 3,
+        py: 2,
         border: borderColor ? `1px solid ${borderColor}` : undefined,
-        bgcolor: `${color}.50`,
+        // bgcolor: `${color}.50`,
       }}
     >
       <Box display="flex" alignItems="center">
         <Avatar
           sx={{
-            bgcolor: `${color}.100`,
-            color: `${color}.main`,
+            bgcolor: `${color}.main`,
             mr: 2,
             width: 40,
             height: 40,
@@ -38,14 +38,14 @@ export const IconMetricCard = ({
           {icon}
         </Avatar>
         <Box>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="subtitle2" fontWeight="bold" color="text.secondary">
             {title}
           </Typography>
           <Typography variant="h5" fontWeight="bold">
             {value}
           </Typography>
           {description && (
-            <Typography variant="caption" color={`${color}.main`}>
+            <Typography variant="subtitle2" color={`${color}.main`}>
               {description}
             </Typography>
           )}

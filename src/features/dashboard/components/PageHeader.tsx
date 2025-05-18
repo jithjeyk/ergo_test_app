@@ -6,12 +6,12 @@ export const PageHeader = ({ title }: { title: string }) => {
   
   return (
     <Box mb={4}>
-      <Typography variant="h4" fontWeight="bold" color="text.primary">
+      <Typography variant="h4" color="text.primary">
         {title}
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="subtitle2">
         Last updated: {currentDate.formattedDate}
       </Typography>
     </Box>
   );
-};
+}; 

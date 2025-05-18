@@ -11,9 +11,8 @@ export const ComplianceStatus = () => {
     <SectionCard
       title="Compliance & Security Status"
       icon={<SecurityIcon color="primary" />}
-      sx={{ mt: 2 }}
     >
-      <Grid container spacing={3} mb={4}>
+      <Grid container spacing={3} mb={2.5}>
         <Grid item xs={12} md={6} lg={4}>
           <IconMetricCard
             icon={<SecurityIcon />}

@@ -18,17 +18,17 @@ export const ProgressMetricCard = ({
   maxLabel = "100%",
 }: ProgressMetricCardProps) => {
   return (
-    <Card sx={{ p: 2, bgcolor: "grey.50" }}>
+    <Card sx={{ p: 2, bgcolor: "background.paper" }}>
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         mb={1}
       >
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body1" color="text.secondary">
           {title}
         </Typography>
-        <Typography variant="body2" fontWeight="bold" color={`${color}.main`}>
+        <Typography variant="body1" fontWeight="bold" color={`${color}.main`}>
           {value}
         </Typography>
       </Box>

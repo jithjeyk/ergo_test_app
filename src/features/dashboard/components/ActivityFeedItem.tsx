@@ -25,6 +25,7 @@ export const ActivityFeedItem = ({
       sx={{
         borderBottom: borderBottom ? "1px solid" : undefined,
         borderColor: "divider",
+        height: "auto"
       }}
     >
       <Avatar
@@ -39,13 +40,13 @@ export const ActivityFeedItem = ({
         {icon}
       </Avatar>
       <Box>
-        <Typography variant="body2" fontWeight="medium">
+        <Typography variant="body1" fontWeight="medium">
           {title}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body1" color="text.secondary">
           {description}
         </Typography>
-        <Typography variant="caption" color="text.disabled">
+        <Typography variant="subtitle2" color="text.disabled">
           {timestamp}
         </Typography>
       </Box>

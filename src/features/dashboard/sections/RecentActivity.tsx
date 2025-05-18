@@ -12,9 +12,9 @@ export const RecentActivity = () => {
     <SectionCard
       title="Recent Activity"
       icon={<VisibilityIcon color="primary" />}
-      sx={{ mt: 2 }}
+      sx={{ height: "100%" }}
     >
-      <Box>
+      <Box sx={{ minHeight: 433, overflowY: "auto" }}>
         <ActivityFeedItem
           icon={<CloudUploadIcon />}
           title="Document Uploaded"

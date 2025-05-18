@@ -15,7 +15,7 @@ import { KnowledgeHotspot } from "./sections/KnowledgeHotspot";
 
 const DashboardPage = () => {
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: { xs: 1, md: 2 } }}>
       <PageHeader title="Dashboard Overview" />
 
       <Grid container spacing={2}>
@@ -24,60 +24,70 @@ const DashboardPage = () => {
           <ServerPerformance />
         </Grid>
 
-        {/* Second Row - AI and Documents */}
-        <Grid item xs={12} md={8}>
-          <Grid container>
-            <Grid item xs={12}>
-              <AIModelPerformance />
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} lg={4}>
+              <PendingActions />
             </Grid>
-            <Grid item xs={12}>
-              <DocumentAnalytics />
+            <Grid item xs={12} lg={4}>
+              <AlertsSection />
+            </Grid>
+            <Grid item xs={12} lg={4}>
+              <LicenseUsage />
             </Grid>
           </Grid>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} lg={4}>
           <Grid container>
             <Grid item xs={12}>
               <RecentActivity />
             </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item xs={12} lg={8}>
+          <Grid container>
             <Grid item xs={12}>
-              <PendingActions />
+              <AIModelPerformance />
             </Grid>
           </Grid>
         </Grid>
 
-        {/* Third Row - Storage and Search */}
-        <Grid item xs={12} md={6}>
-          <StorageBackup />
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <DocumentAnalytics />
+            </Grid>
+            <Grid item xs={12}>
+              <AISearchAnalytics />
+            </Grid>
+          </Grid>
         </Grid>
 
-        <Grid item xs={12} md={6}>
-          <AISearchAnalytics />
-        </Grid>
-
-        {/* Fourth Row - Compliance and Monitoring */}
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} lg={8}>
           <Grid container>
             <Grid item xs={12}>
               <ComplianceStatus />
             </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item xs={12} lg={4}>
+          <Grid container>
             <Grid item xs={12}>
-              <UserHeatmap />
+              <StorageBackup />
             </Grid>
           </Grid>
         </Grid>
 
-        <Grid item xs={12} md={4}>
-          <Grid container>
-            <Grid item xs={12}>
-              <AlertsSection />
-            </Grid>
-            <Grid item xs={12}>
-              <LicenseUsage />
-            </Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <KnowledgeHotspot />
+            </Grid>
+            <Grid item xs={12}>
+              <UserHeatmap />
             </Grid>
           </Grid>
         </Grid>

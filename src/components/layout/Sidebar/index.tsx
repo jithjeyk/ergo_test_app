@@ -1,5 +1,11 @@
-import React from "react";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import React, { useMemo } from "react";
+import {
+  styled,
+  useTheme,
+  Theme,
+  CSSObject,
+  useMediaQuery,
+} from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -81,9 +87,19 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ open, onDrawerClose }) => {
   const theme = useTheme();
   const translatedMenuItems = useTranslatedMenuItems();
+  const isMobile = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down("sm")
+  );
+  const drawerDisplay = useMemo(() => {
+    return isMobile ? (open ? "block" : "none") : "block";
+  }, [isMobile, open]);
 
   return (
-    <StyledDrawer variant="permanent" open={open}>
+    <StyledDrawer
+      sx={{ display: drawerDisplay }}
+      variant="permanent"
+      open={open}
+    >
       <DrawerHeader>
         <Typography
           variant="h4"
