@@ -1,4 +1,4 @@
-import { AssistantConversation } from "../components/Sidebar";
+import { AssistantConversation } from "../../../types/myAssistant";
 import { dateRangeUtils } from "../../../utils/dateUtils";
 
 export const useConversationsOrganizer = (
