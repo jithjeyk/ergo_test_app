@@ -4,22 +4,26 @@ import {
   TextField,
   IconButton,
   InputAdornment,
-  Typography,
+  // Typography,
 } from "@mui/material";
 import { Send, AttachFile, AutoFixHigh } from "@mui/icons-material";
-import { useState, useRef, KeyboardEvent } from "react";
+import React, { useState, KeyboardEvent } from "react";
 import { FilePreview } from "./FilePreview";
-import { AttachmentModal } from "./AttachmentModal";
 
 interface ChatInputProps {
-  onSend: (message: string, files?: File[]) => void;
+  onSend: (message: string, attachments?: File[]) => void;
+  attachments: File[];
+  setAttachments: React.Dispatch<React.SetStateAction<File[]>>;
+  onOpenAttachmentModal: () => void;
 }
 
-export const ChatInput = ({ onSend }: ChatInputProps) => {
+export const ChatInput = ({
+  onSend,
+  attachments,
+  setAttachments,
+  onOpenAttachmentModal,
+}: ChatInputProps) => {
   const [message, setMessage] = useState("");
-  const [attachments, setAttachments] = useState<File[]>([]);
-  const [attachmentModalOpen, setAttachmentModalOpen] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = () => {
     if (message.trim() || attachments.length > 0) {
@@ -34,10 +38,6 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
       e.preventDefault();
       handleSend();
     }
-  };
-
-  const handleFileSelect = (files: File[]) => {
-    setAttachments((prev) => [...prev, ...files]);
   };
 
   const removeAttachment = (index: number) => {
@@ -80,20 +80,17 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
         onKeyDown={handleKeyDown}
         placeholder="Ask the AI anything..."
         InputProps={{
-          sx: { borderRadius: 6, bgcolor: "background.paper" },
+          sx: { borderRadius: 6, bgcolor: "background.paper", px: 3, py: 2},
           startAdornment: (
             <InputAdornment position="start">
-              <IconButton
-                edge="start"
-                onClick={() => setAttachmentModalOpen(true)}
-              >
+              <IconButton edge="start" onClick={onOpenAttachmentModal}>
                 <AttachFile />
               </IconButton>
             </InputAdornment>
           ),
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton edge="end">
+              <IconButton edge="end" sx={{mr: 0.5}}>
                 <AutoFixHigh />
               </IconButton>
               <IconButton
@@ -109,32 +106,15 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
         }}
       />
 
-      <Typography
+      {/* <Typography
         variant="caption"
         display="block"
         textAlign="center"
         mt={1}
         color="text.secondary"
       >
-        AI Assistant may produce inaccurate information. Consider verifying
-        important information.
-      </Typography>
-
-      <AttachmentModal
-        open={attachmentModalOpen}
-        onClose={() => setAttachmentModalOpen(false)}
-        onFilesSelected={handleFileSelect}
-      />
-
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: "none" }}
-        multiple
-        onChange={(e) =>
-          e.target.files && handleFileSelect(Array.from(e.target.files))
-        }
-      />
+        Press Enter to send, Shift+Enter for new line
+      </Typography> */}
     </Box>
   );
 };

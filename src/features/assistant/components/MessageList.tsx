@@ -1,8 +1,8 @@
-// components/Chat/MessageList.tsx
-import { Box } from '@mui/material';
-import { Conversation } from './Conversation';
-import { TypingIndicator } from './TypingIndicator';
-import { AiConversationType } from '../../../types/chat';
+import { useEffect, useRef } from "react";
+import { Box } from "@mui/material";
+import { Conversation } from "./Conversation";
+import { TypingIndicator } from "./TypingIndicator";
+import { AiConversationType } from "../../../types/chat";
 
 interface MessageListProps {
   messages: AiConversationType[];
@@ -10,20 +10,27 @@ interface MessageListProps {
   onReferenceClick?: (refId: string) => void;
 }
 
-export const MessageList = ({ 
-  messages, 
-  isTyping, 
-  onReferenceClick 
+export const MessageList = ({
+  messages,
+  isTyping,
+  onReferenceClick,
 }: MessageListProps) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.length, isTyping]);
+
   return (
     <Box
+      ref={containerRef}
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        // gap: 2,
-        // height: '100%',
-        overflowY: 'auto',
-        // p: 2
+        display: "flex",
+        flexDirection: "column",
+        overflowY: "auto",
+        pt: {xs: 2.5, lg: 1.5},
+        maxHeight: "100%", // Optional: needed if container is limited in height
       }}
     >
       {messages.map((message) => (
@@ -38,8 +45,11 @@ export const MessageList = ({
           onReferenceClick={onReferenceClick}
         />
       ))}
-      
+
       {isTyping && <TypingIndicator />}
+
+      {/* Scroll anchor element */}
+      <div ref={bottomRef} />
     </Box>
   );
 };

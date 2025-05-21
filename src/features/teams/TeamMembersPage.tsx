@@ -11,7 +11,7 @@ import { useTeamMembers } from "../../hooks/useTeamMembers";
 import { TeamOverview } from "./components/TeamOverview";
 import { useModalSubmitConnection } from "../../hooks/useModalSubmitConnection";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import ArticleIcon from '@mui/icons-material/Article';
+import ArticleIcon from "@mui/icons-material/Article";
 
 const TeamMembersPage = () => {
   const { registerSubmitHandler, triggerSubmit } = useModalSubmitConnection();
@@ -87,7 +87,9 @@ const TeamMembersPage = () => {
         size={"md" as ModalSize}
         title="Add New Team Member"
         showHeaderDivider
-        titleIcon={<PersonAddIcon />}
+        titleIcon={
+          <PersonAddIcon sx={{ display: "flex", justifyContent: "center" }} />
+        }
         primaryButtonText="Save"
         secondaryButtonText="Cancel"
         onPrimaryAction={handleAddTeamMember}
@@ -102,13 +104,11 @@ const TeamMembersPage = () => {
         size={"md" as ModalSize}
         title="User Details"
         showHeaderDivider
-        titleIcon={<ArticleIcon />
-
+        titleIcon={
+          <ArticleIcon sx={{ display: "flex", justifyContent: "center" }} />
         }
       >
-        <UserDetailModalContent
-          member={selectedMember}
-        />
+        <UserDetailModalContent member={selectedMember} />
       </DmsModal>
 
       {/* <UserDetailModal

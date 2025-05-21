@@ -42,8 +42,9 @@ export const Conversation = ({
         display: "flex",
         justifyContent: isAI ? "flex-start" : "flex-end",
         // mb: 2,
+        // pt: 2,
         mx: "auto",
-        width: "60%",
+        width: { xs: "100%", sm: "80%", md: "90%", lg: "60%" },
       }}
     >
       <Box
@@ -51,7 +52,7 @@ export const Conversation = ({
           display: "flex",
           flexDirection: "row",
           gap: 2,
-          maxWidth: { xs: "80%", md: isAI ? "100%" : "80%" },
+          // maxWidth: { xs: "80%", md: isAI ? "100%" : "80%" },
           width: { xs: "80%", md: isAI ? "100%" : "auto" },
         }}
       >
@@ -61,6 +62,7 @@ export const Conversation = ({
             sx={{
               bgcolor: "primary.light",
               alignSelf: "flex-start",
+              display: { xs: "none", sm: "flex" },
             }}
           >
             {<SmartToyOutlinedIcon />}
@@ -155,6 +157,7 @@ export const Conversation = ({
             sx={{
               bgcolor: "primary.main",
               alignSelf: "flex-start",
+              display: { xs: "none", sm: "flex" },
             }}
           >
             {<PersonIcon />}

@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -67,8 +67,12 @@ export interface DmsModalProps
   contentSx?: object;
   /** Custom styles for dialog actions component */
   actionsSx?: object;
+  /** Additional props for the Dialog primary button*/
+  primaryButtonSx?: object;
   /** Custom elevation for the Paper component */
   elevation?: number;
+  /** Id for Dialog primary action */
+  id?: string;
 }
 
 /**
@@ -98,7 +102,9 @@ export const DmsModal: React.FC<DmsModalProps> = ({
   titleSx = {},
   contentSx = {},
   actionsSx = {},
+  primaryButtonSx = {},
   elevation = 4,
+  id = "",
   ...dialogProps
 }) => {
   const theme = useTheme();
@@ -112,13 +118,13 @@ export const DmsModal: React.FC<DmsModalProps> = ({
 
   // Handle default actions if not provided
   const handlePrimaryAction = () => {
+    if (!id) return; // prevent accidental close
     if (onPrimaryAction) {
       onPrimaryAction();
     } else {
       onClose();
     }
   };
-
   const handleSecondaryAction = () => {
     if (onSecondaryAction) {
       onSecondaryAction();
@@ -126,6 +132,20 @@ export const DmsModal: React.FC<DmsModalProps> = ({
       onClose();
     }
   };
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === "Enter" && id) {
+        handlePrimaryAction();
+      }
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [id]);
 
   return (
     <Dialog
@@ -141,7 +161,8 @@ export const DmsModal: React.FC<DmsModalProps> = ({
         sx: {
           borderRadius: { xs: size === "full" ? 0 : 2, sm: 2 },
           height:
-            size === "full" || (isMobile && size === "xs") ? "100%" : "auto",
+            size === "full" ? "100%" : "auto",
+            // size === "full" || (isMobile && size === "xs") ? "100%" : "auto",
           overflowY: "auto",
           ...paperSx,
         },
@@ -154,16 +175,23 @@ export const DmsModal: React.FC<DmsModalProps> = ({
         <>
           <DialogTitle
             sx={{
-              p: { xs: 2, sm: 3 },
+              px: { xs: 2, sm: 3 },
+              height: 70,
               bgcolor: "primary.main",
               color: "primary.contrastText",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
               ...titleSx,
+              "& .MuiTypography-root": {
+                // Style the title text specifically
+                fontSize: "1.25rem",
+                fontWeight: 600,
+                letterSpacing: 0.15,
+              },
             }}
           >
-            <Stack direction="row" spacing={1} alignItems="center">
+            <Stack direction="row" spacing={1} alignItems={"center"}>
               {titleIcon && <span>{titleIcon}</span>}
               {typeof title === "string" ? (
                 <Typography variant={isMobile ? "h6" : "h5"} component="div">
@@ -209,7 +237,7 @@ export const DmsModal: React.FC<DmsModalProps> = ({
             <DialogActions
               sx={{
                 px: { xs: 2, sm: 3 },
-                py: { xs: 2, sm: 2.5 },
+                py: { xs: 1.5, sm: 2 },
                 bgcolor: "background.paper",
                 display: "flex",
                 justifyContent: "space-between",
@@ -240,6 +268,7 @@ export const DmsModal: React.FC<DmsModalProps> = ({
                     sx={{
                       px: { xs: 3, sm: 4 },
                       fontWeight: "bold",
+                      ...primaryButtonSx,
                     }}
                   >
                     {primaryButtonText}
